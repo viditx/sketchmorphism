@@ -203,6 +203,10 @@
         <label for="grp-axes">Axes Color</label>
         <input type="color" id="grp-axes" value="#47658c">
       </div>
+      <div class="ctrl-group">
+        <label for="comp-size">Size</label>
+        <input type="range" id="comp-size" min="0.5" max="2" step="0.1" value="1" style="cursor: pointer; accent-color: var(--blue);">
+      </div>
     </div>
 
     <div class="code-block">
@@ -231,6 +235,10 @@
           el.style.setProperty('stroke', e.target.value);
         }
       });
+    });
+    
+    document.getElementById('comp-size').addEventListener('input', (e) => {
+      document.querySelector('.skm-graph').style.transform = `scale(${e.target.value})`;
     });
   </script>
 

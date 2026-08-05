@@ -21,7 +21,7 @@ This is a Monorepo managed with npm workspaces, kept clean and modular:
 
 *   **`packages/core`**: The engine. Contains pure JS/TS logic, SVG filter generation (wobble, squiggly), and base styles. Framework agnostic.
 *   **`packages/react`**: React bindings and components (Buttons, Inputs, etc.) that consume the core filters.
-*   **`packages/icons`**: A dedicated suite of sketch-style SVG icons.
+*   **`packages/icons`**: A dedicated suite of sketch-style SVG icons. *(I will build a massive library of animated SVG icons if this repo gets enough support!)*
 *   **`prototypes/`**: HTML/CSS prototypes of components to reference the raw SVG and CSS structure.
 
 ## 🚀 How to use this in your project

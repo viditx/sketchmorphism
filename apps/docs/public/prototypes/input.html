@@ -204,6 +204,10 @@
         <label for="inp-label">Label Text</label>
         <input type="text" id="inp-label" value="Secret Code">
       </div>
+      <div class="ctrl-group">
+        <label for="comp-size">Size</label>
+        <input type="range" id="comp-size" min="0.5" max="2" step="0.1" value="1" style="cursor: pointer; accent-color: var(--blue);">
+      </div>
     </div>
 
     <div class="code-block">
@@ -227,6 +231,10 @@
     
     document.getElementById('inp-label').addEventListener('input', (e) => {
       labelEl.textContent = e.target.value || '\u00A0';
+    });
+    
+    document.getElementById('comp-size').addEventListener('input', (e) => {
+      document.querySelector('.skm-field').style.transform = `scale(${e.target.value})`;
     });
   </script>
 
