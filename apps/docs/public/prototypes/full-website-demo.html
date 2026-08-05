@@ -1,130 +1,1824 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sketchmorphism Full Website Demo</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600&family=Shantell+Sans:wght@400;600&family=Space+Mono&display=swap');
-    
-    :root {
-      --paper: #f4efe3;
-      --paper-lift: #fbf7ec;
-      --ink: #2b2823;
-      --ink-soft: #5d574d;
-      --blue: #47658c;
-      --red: #c2402a;
-    }
-    
-    body {
-      background-color: var(--paper);
-      color: var(--ink);
-      font-family: 'Schibsted Grotesk', system-ui, sans-serif;
-      margin: 0;
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 40px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Sketchmorphism — An Original Design Language</title>
+<meta name="description" content="Sketchmorphism: an original interface language built on drawn strokes, hatched depth and a three-pencil palette. Spec 001, Rev F — Rounded Edition.">
+<meta property="og:title" content="Sketchmorphism — An Original Design Language">
+<meta property="og:description" content="Strokes over borders. Hatches over shadows. Three pencils only. A hand-drawn design system, built for production.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#d7cfbc">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15120e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%23f4efe3'/%3E%3Cpath d='M20 6c8 0 14 5.5 14 14S28 34 19 34 6 28 6 20 12 6 20 6c3 0 5.5 1 7.5 2.5' fill='none' stroke='%23c2402a' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E">
 
-    .demo-container {
-      width: 100%;
-      max-width: 800px;
-      background: var(--paper-lift);
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(43, 40, 35, 0.05);
-      border: 2px dashed rgba(43, 40, 35, 0.1);
-    }
+<script>(function(){try{var s=localStorage.getItem('skm-dark');var d=s===null?matchMedia('(prefers-color-scheme: dark)').matches:s==='1';if(d)document.documentElement.classList.add('dark')}catch(e){}})();</script>
 
-    h1 {
-      font-family: 'Shantell Sans', cursive;
-      color: var(--ink);
-      text-align: center;
-    }
-  </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Schibsted+Grotesk:wght@400;500;700&family=Shantell+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   SKETCHMORPHISM · SPEC 001 · REV F — ROUNDED EDITION
+   Doctrine: strokes over borders · hatches over shadows ·
+   three pencils only · pass count is hierarchy · visible
+   construction · one hand · redraw, don't animate.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 01 · TOKENS ─────────────────────────────────────────────── */
+:root{
+  color-scheme:light;
+  --desk:#d7cfbc;         --desk-hatch:rgba(43,40,35,.28);
+  --paper:#f4efe3;        --paper-lift:#fbf7ec;      --paper-deep:#ece4d0;
+  --ink:#2b2823;          --ink-rgb:43,40,35;
+  --ink-soft:#5d574d;     --ink-faint:rgba(var(--ink-rgb),.35);
+  --blue:#47658c;         --blue-ghost:rgba(71,101,140,.30);
+  --red:#c2402a;          --red-ghost:rgba(194,64,42,.55);
+  --hatch:rgba(var(--ink-rgb),.48);
+  --stain-rgb:120,86,56;  --tape:rgba(236,228,208,.78);
+  --hatch-angle:47deg;
+
+  --spring:cubic-bezier(.27,1.36,.39,1);
+  --ink-ease:cubic-bezier(.5,.05,.35,1);
+  --f1:url(#wob1);
+  --f2:url(#wob2);
+
+  --sheet-r:16px 22px 18px 24px / 22px 16px 24px 18px;
+  --rad-card:14px; --rad-btn:12px; --rad-panel:16px;
+
+  --disp:'Fraunces',Georgia,serif;
+  --body:'Schibsted Grotesk',system-ui,sans-serif;
+  --note:'Shantell Sans',cursive;
+  --mono:'Space Mono',monospace;
+
+  --pen-cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M3 3l6 1.8L4.8 9z' fill='%232b2823'/%3E%3Cpath d='M9 4.8l3 1L6 12l-1.2-3z' fill='%23dcc9a4'/%3E%3Cpath d='M12 5.8L24.5 18.3 18.3 24.5 5.8 12z' fill='%23c2402a' stroke='%232b2823' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M24.5 18.3l3 3-6.2 6.2-3-3z' fill='%2347658c' stroke='%232b2823' stroke-width='1.2'/%3E%3C/svg%3E") 3 3;
+  --eraser-cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg transform='rotate(-35 16 16)'%3E%3Crect x='7' y='11' width='18' height='10' rx='3' fill='%23e8b4a8' stroke='%232b2823' stroke-width='1.6'/%3E%3Cpath d='M13 11v10' stroke='%232b2823' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") 16 16;
+}
+.dark{
+  color-scheme:dark;
+  --desk:#15120e;         --desk-hatch:rgba(0,0,0,.6);
+  --paper:#221e17;        --paper-lift:#2b261d;      --paper-deep:#1a1712;
+  --ink:#e9e1cf;          --ink-rgb:233,225,207;
+  --ink-soft:#b0a68e;     --ink-faint:rgba(var(--ink-rgb),.3);
+  --blue:#93aac8;         --blue-ghost:rgba(147,170,200,.28);
+  --red:#e05a3a;          --red-ghost:rgba(224,90,58,.5);
+  --stain-rgb:205,165,115;--tape:rgba(214,204,180,.24);
+}
+
+/* ── 02 · BASE ───────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--desk);color:var(--ink);
+  font-family:var(--body);font-size:16px;line-height:1.6;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  transition:background-color .5s ease;
+}
+body.crumple-lock{overflow:hidden!important}
+body::after{
+  content:"";position:fixed;inset:0;z-index:60;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.15 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+.dark body::after{mix-blend-mode:screen}
+::selection{background:var(--red-ghost);color:var(--paper-lift)}
+:focus-visible{outline:2px dashed var(--blue);outline-offset:4px;border-radius:4px}
+section{scroll-margin-top:40px}
+[hidden]{display:none!important}
+.wrap{max-width:1080px;margin-inline:auto;padding-inline:clamp(18px,4vw,40px)}
+
+.skip{
+  position:fixed;top:-56px;left:16px;z-index:100;
+  background:var(--paper-lift);color:var(--ink);text-decoration:none;
+  padding:.65em 1.1em;border-radius:10px;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+  box-shadow:0 0 0 2px var(--ink);transition:top .35s var(--spring);
+}
+.skip:focus-visible{top:14px}
+
+.desk{position:relative;padding:clamp(16px,3.5vw,52px) clamp(8px,2vw,32px) clamp(40px,5vw,72px)}
+.sheet{position:relative;z-index:0;max-width:1210px;margin-inline:auto}
+.sheet-hatch{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:repeating-linear-gradient(var(--hatch-angle),transparent 0 5px,var(--desk-hatch) 5px 6.4px);
+  border-radius:var(--sheet-r);filter:var(--f2);
+  transform:translate(16px,20px) rotate(.3deg);
+}
+.sheet-face{
+  position:relative;z-index:1;background:var(--paper);
+  border-radius:var(--sheet-r);
+  box-shadow:inset 0 0 0 1.5px rgba(var(--ink-rgb),.18);
+  transition:background-color .5s ease;
+}
+
+/* crumple + fresh sheet */
+@keyframes toss{
+  0%{transform:none}
+  26%{transform:translate(2vw,-2vh) scale(.82) rotate(4deg)}
+  60%{transform:translate(26vw,12vh) scale(.4) rotate(38deg)}
+  100%{transform:translate(85vw,120vh) scale(.12) rotate(152deg)}
+}
+@keyframes wrinkle{
+  0%{border-radius:var(--sheet-r)}
+  40%{border-radius:14% 20% 16% 18% / 18% 14% 20% 16%}
+  100%{border-radius:40% 52% 46% 58% / 55% 42% 58% 44%}
+}
+@keyframes drop{
+  0%{transform:translateY(-48px) rotate(-1.8deg);opacity:0}
+  60%{opacity:1}
+  100%{transform:none;opacity:1}
+}
+.desk.crumpling{pointer-events:none}
+.desk.crumpling .sheet{animation:toss 1.2s cubic-bezier(.5,.02,.6,.4) forwards}
+.desk.crumpling .sheet-face{animation:wrinkle 1.2s cubic-bezier(.5,.02,.6,.4) forwards}
+.desk.crumpling .sheet-hatch{opacity:0;transition:opacity .25s}
+.desk.crumpling .creases{opacity:.55;transition:opacity .3s .08s}
+.desk.fresh .sheet{animation:drop .85s var(--spring)}
+
+/* ink playground layer */
+.ink-layer{position:absolute;inset:0;width:100%;height:100%;z-index:44;pointer-events:none;overflow:visible}
+.ink-layer .stroke{stroke:var(--ink);stroke-linecap:round;stroke-linejoin:round;fill:none;opacity:.92;filter:var(--f1)}
+.ink-layer .dot{fill:var(--ink);stroke:none;opacity:.6;filter:var(--f1)}
+.ink-layer .erasing{opacity:0!important;transition:opacity .25s ease}
+.measure .m-line{stroke:var(--blue);stroke-width:2;fill:none;filter:var(--f1)}
+.measure .m-tick{stroke:var(--blue);stroke-width:2;fill:none}
+.measure .m-label{
+  font-family:var(--mono);font-size:10.5px;fill:var(--blue);letter-spacing:.06em;
+  text-anchor:middle;paint-order:stroke;stroke:var(--paper);stroke-width:3.5px;
+}
+.measure.preview{opacity:.6}
+.creases{position:absolute;inset:0;width:100%;height:100%;z-index:43;pointer-events:none;opacity:0;transition:opacity .35s}
+.creases path{fill:none;stroke:rgba(var(--ink-rgb),.3);stroke-width:1.1;vector-effect:non-scaling-stroke;filter:var(--f1)}
+
+.sheet-face.tool-draw{cursor:var(--pen-cursor),pointer;user-select:none;touch-action:none}
+.sheet-face.tool-measure{cursor:crosshair;user-select:none;touch-action:none}
+.sheet-face.tool-fix{cursor:var(--eraser-cursor),auto;user-select:none;touch-action:none}
+
+.btn,.nav a,.scrib,.switch,.check,.stamp,.tool-btn,.lamp{cursor:var(--pen-cursor),pointer}
+
+.mark{
+  position:fixed;z-index:85;width:13px;height:7px;pointer-events:none;
+  background:rgba(var(--ink-rgb),.55);filter:var(--f1);
+  border-radius:60% 40% 55% 45% / 50% 60% 40% 50%;
+  animation:markFade .9s ease-out forwards;
+}
+@keyframes markFade{to{opacity:0;transform:scale(1.7) rotate(8deg)}}
+
+.progress{position:fixed;top:0;left:0;right:0;height:22px;z-index:80;pointer-events:none}
+.progress-stroke{
+  position:absolute;top:6px;left:0;height:4px;width:0;
+  background:var(--red);border-radius:4px 8px 5px 7px;filter:var(--f1);
+}
+.progress-pencil{
+  position:absolute;top:-2px;left:0;width:54px;height:12px;
+  transform:translateX(-6px) rotate(-2deg);filter:var(--f1);
+}
+
+.reg{position:absolute;width:18px;height:18px;opacity:.5;pointer-events:none;z-index:3}
+.reg::before,.reg::after{content:"";position:absolute;background:var(--ink)}
+.reg::before{left:50%;top:0;bottom:0;width:1.5px;transform:translateX(-50%)}
+.reg::after{top:50%;left:0;right:0;height:1.5px;transform:translateY(-50%)}
+.reg-tl{top:16px;left:16px}.reg-tr{top:16px;right:16px}
+.reg-bl{bottom:16px;left:16px}.reg-br{bottom:16px;right:16px}
+
+.guide{position:fixed;top:0;bottom:0;width:2px;background:var(--blue-ghost);opacity:.4;filter:var(--f1);z-index:0;pointer-events:none}
+.guide-l{left:max(18px,calc(50% - 566px))}
+.guide-r{right:max(18px,calc(50% - 566px))}
+
+.edge-title{
+  position:fixed;left:10px;top:50%;transform:translateY(-50%);z-index:55;
+  writing-mode:vertical-rl;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.42em;text-transform:uppercase;color:rgba(var(--ink-rgb),.4);
+  font-variant-numeric:tabular-nums;
+}
+@media (max-width:1250px){.edge-title{display:none}}
+
+.stain{position:absolute;pointer-events:none;filter:var(--f2)}
+.stain path,.stain circle{fill:none;stroke:rgba(var(--stain-rgb),.14);stroke-linecap:round}
+.stain .s-a{stroke-width:8}
+.stain .s-b{stroke-width:4;stroke:rgba(var(--stain-rgb),.11)}
+.stain circle{fill:rgba(var(--stain-rgb),.12);stroke:none}
+.stain--1{top:6px;left:-40px;width:170px;transform:rotate(14deg);opacity:.75}
+.stain--2{bottom:-28px;right:6%;width:140px;transform:rotate(-9deg);opacity:.6}
+
+/* ── 03 · PRIMITIVES ─────────────────────────────────────────── */
+.hatch{
+  position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:repeating-linear-gradient(var(--hatch-angle),
+    transparent 0 3.5px,var(--hatch-c,var(--hatch)) 3.5px 4.6px);
+  border-radius:15px;filter:var(--f2);
+  transform:translate(var(--lx,8px),var(--ly,10px)) rotate(var(--lr,.6deg));
+  transition:transform .5s var(--spring);
+}
+.mono{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);font-variant-numeric:tabular-nums}
+.note{font-family:var(--note);color:var(--ink-soft);font-size:.98rem;line-height:1.4;transform:rotate(var(--tilt,0deg))}
+
+.sk-border{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
+.sk-baked::before{content:none!important}
+.btn--primary .btn-label.sk-baked::after,
+.stamp.sk-baked::after{content:none!important}
+.input-wrap.sk-baked::before,.input-wrap.sk-baked::after{content:none!important}
+.p-no.sk-baked,.stamp.sk-baked{border:0!important}
+.sk-focus{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .5s var(--spring)}
+.input-wrap:focus-within .sk-focus{stroke-dashoffset:0}
+
+.draw{stroke-dasharray:1;stroke-dashoffset:1}
+.play .draw{animation:draw .9s var(--ink-ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+.frule{display:block;width:calc(100% + 28px);margin:16px -14px 0;height:14px;overflow:visible}
+.frule .fr-line{stroke:var(--ink);stroke-width:2;fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke;filter:var(--f1)}
+.frule .fr-tick{stroke:var(--blue);stroke-width:2;fill:none;vector-effect:non-scaling-stroke}
+.play .fr-line{animation:draw .8s var(--ink-ease) .15s forwards}
+.frule--mast{margin-top:0;width:calc(100% + 24px);margin-left:-12px}
+
+.settle{
+  opacity:0;
+  transform:translateY(18px) rotate(calc(var(--tilt,0deg) + 1.4deg));
+  transition:opacity .55s ease,transform .65s var(--spring);
+}
+.settle.in{opacity:1;transform:translateY(0) rotate(var(--tilt,0deg))}
+
+.pencil{display:block;filter:var(--f1)}
+.pencil--ink{--pen-body:#8b8478;--pen-core:#2b2823}
+.pencil--blue{--pen-body:#8fa7c4;--pen-core:#47658c}
+.pencil--red{--pen-body:#d96a4e;--pen-core:#c2402a}
+
+.doodle{position:absolute;width:46px;overflow:visible;pointer-events:none;opacity:.75}
+.doodle path{fill:none;stroke-width:3;stroke-linecap:round;filter:var(--f1)}
+
+/* ── 04 · MASTHEAD ───────────────────────────────────────────── */
+.masthead{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-block:28px 14px;position:relative;z-index:1}
+.logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.logo-mark{width:38px;height:38px;filter:var(--f2);transition:transform .5s var(--spring)}
+.logo:hover .logo-mark{transform:rotate(12deg)}
+.logo-text{font-family:var(--mono);font-weight:700;font-size:.95rem;letter-spacing:.12em}
+.logo-no{color:var(--red)}
+.mast-right{display:flex;align-items:center;gap:clamp(12px,2vw,24px);flex-wrap:wrap}
+.nav{display:flex;gap:clamp(10px,2vw,22px);flex-wrap:wrap}
+.nav a{position:relative;color:var(--ink);text-decoration:none;font-weight:500;font-size:.95rem;padding:.2em .1em;transition:color .3s ease}
+.nav a::after{
+  content:"";position:absolute;left:-3%;right:-5%;bottom:-1px;height:3px;
+  background:repeating-linear-gradient(90deg,var(--blue) 0 6px,transparent 6px 9px);
+  transform:scaleX(0);transform-origin:left;transition:transform .45s var(--spring);
+}
+.nav a:hover::after,.nav a:focus-visible::after,.nav a.current::after{transform:scaleX(1)}
+.nav a.current{color:var(--blue)}
+
+.lamp{
+  position:relative;width:42px;height:36px;border:0;background:var(--paper-lift);
+  border-radius:10px;display:grid;place-items:center;transition:background-color .45s ease;
+}
+.lamp svg{width:22px;height:22px;overflow:visible;transition:transform .5s var(--spring)}
+.lamp:hover svg{transform:rotate(14deg)}
+.lamp svg *{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+.lamp .sun{display:none}
+.dark .lamp .sun{display:inline}
+.dark .lamp .moon{display:none}
+
+.titlezone{position:relative;z-index:1;padding-block:clamp(46px,7vw,88px) clamp(42px,6vw,64px)}
+.kicker{display:block;margin-bottom:18px}
+.kicker::before{content:"";display:inline-block;width:34px;border-top:2.5px solid var(--red);vertical-align:middle;margin-right:12px;transform:rotate(-1.5deg);filter:var(--f1)}
+h1{
+  font-family:var(--disp);font-weight:560;line-height:.98;letter-spacing:-.015em;
+  font-size:clamp(3rem,9vw,6.2rem);
+  font-variation-settings:"opsz" 144,"SOFT" 30,"WONK" 1;
+  position:relative;display:inline-block;padding-bottom:.18em;
+}
+.under{position:absolute;left:-2%;bottom:-.04em;width:104%;height:.3em;overflow:visible}
+.under .u1{stroke:var(--red);filter:var(--f2)}
+.under .u2{stroke:var(--red-ghost);filter:var(--f1)}
+.lede{max-width:34em;font-size:clamp(1.05rem,1.6vw,1.22rem);color:var(--ink-soft);margin-top:26px;text-wrap:balance}
+.lede strong{color:var(--ink);font-weight:600}
+
+.head-meta{display:flex;align-items:center;gap:28px;flex-wrap:wrap;margin-top:42px}
+.legend{list-style:none;display:flex;gap:26px;flex-wrap:wrap}
+.legend li{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft)}
+.legend .pencil{width:92px;height:17px;transition:transform .45s var(--spring)}
+.legend li:hover .pencil{transform:rotate(-5deg) translateY(-3px)}
+.stamp{
+  display:inline-block;margin-left:auto;font-family:var(--mono);font-size:.68rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--red);
+  padding:.6em 1.1em .5em;position:relative;white-space:nowrap;
+  transform:rotate(-4deg);filter:var(--f2);transition:transform .4s var(--spring);
+}
+.stamp:hover{transform:rotate(-1.5deg) scale(1.04)}
+.stamp.stamped{animation:stampIn .45s var(--spring)}
+@keyframes stampIn{0%{transform:rotate(-8deg) scale(1.3);opacity:.55}100%{transform:rotate(-4deg) scale(1)}}
+.ruler{display:block;margin-top:36px;width:min(300px,60%);overflow:visible}
+.ruler path{stroke:var(--blue);filter:var(--f1)}
+.ruler text{font-family:var(--mono);font-size:9px;fill:var(--blue);letter-spacing:.1em}
+
+/* hero emblem — the drafting composition */
+.hero-art{display:none}
+@media (min-width:1024px){
+  .titlezone{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:48px;align-items:center}
+  .hero-art{display:block;width:100%;max-width:370px;overflow:visible}
+}
+.hero-art .ha-con{fill:none;stroke:var(--blue);stroke-width:1.6;stroke-dasharray:3 7;opacity:.85}
+.hero-art .ha-bg{fill:var(--paper-lift)}
+.hero-art .hp-line{stroke:var(--ink);stroke-width:1.2;opacity:.4}
+.hero-art .ha-ring{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;filter:var(--f1)}
+.hero-art .ha-dim line,.hero-art .ha-dim path{stroke:var(--blue);stroke-width:1.6;fill:none}
+.hero-art .ha-dim text{font-family:var(--mono);font-size:9.5px;fill:var(--blue);letter-spacing:.1em}
+.hero-art .ha-accent{stroke:var(--red);stroke-width:3;fill:none;stroke-linecap:round}
+
+/* ── 05 · FIGURES ────────────────────────────────────────────── */
+.fig{position:relative;z-index:1;padding-block:clamp(44px,6.5vw,80px)}
+.fig-head{position:relative;margin-bottom:clamp(28px,4vw,44px)}
+.fig-kicker{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.fig-tag{position:relative;display:inline-block;padding:2px 7px;color:var(--blue)}
+.fig-tag .loop{position:absolute;left:-13px;top:-8px;width:calc(100% + 26px);height:calc(100% + 16px);overflow:visible;pointer-events:none}
+.loop-p{stroke:var(--red);stroke-width:2.4;fill:none;stroke-linecap:round}
+.play .loop-p{animation:draw .7s var(--ink-ease) .4s forwards}
+.fig-sub{color:var(--ink-soft);letter-spacing:.14em}
+.fig-head h2{
+  font-family:var(--disp);font-weight:600;font-size:clamp(1.7rem,3.4vw,2.4rem);
+  font-variation-settings:"opsz" 100,"WONK" 1;line-height:1.12;margin-top:8px;
+  text-wrap:balance;
+}
+
+/* FIG 00 · principles */
+.principles{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:26px 40px}
+.principles li{display:flex;gap:16px;align-items:flex-start;padding:2px}
+.p-no{
+  position:relative;font-family:var(--mono);font-weight:700;font-size:.8rem;flex:none;
+  padding:.4em .65em;background:var(--paper-lift);border-radius:8px;
+  transform:rotate(-2.5deg);transition:transform .4s var(--spring),background-color .45s ease;
+}
+.principles li:hover .p-no{transform:rotate(3deg) scale(1.07)}
+.principles h3{font-family:var(--disp);font-size:1.15rem;font-weight:600;font-variation-settings:"WONK" 1;margin-bottom:4px}
+.principles p{font-size:.95rem;color:var(--ink-soft)}
+.doodle-star{top:-4px;right:5%;transform:rotate(9deg)}
+.doodle-star path{stroke:var(--red)}
+
+/* FIG 01 · stroke tokens */
+.pass-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.pass .face{position:relative;background:var(--paper-lift);border-radius:var(--rad-card);padding:22px;transition:transform .5s var(--spring),background-color .45s ease}
+.pass:hover .face{transform:translateY(-4px) rotate(-.3deg)}
+.pass strong{display:block;font-family:var(--disp);font-size:1.2rem;font-weight:600;font-variation-settings:"WONK" 1;margin:8px 0 6px}
+.pass p{font-size:.9rem;color:var(--ink-soft)}
+.wscale{display:grid;gap:16px;max-width:480px;margin-top:38px}
+.ws{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px}
+.ws svg{width:100%;height:12px;overflow:visible}
+.ws-p{stroke:var(--ink);fill:none;stroke-linecap:round;filter:var(--f1)}
+.ws .mono{font-size:.62rem;white-space:nowrap}
+
+/* FIG 02 · depth tokens */
+.depth-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;position:relative}
+.card{position:relative;z-index:0}
+.card .face{
+  position:relative;z-index:1;background:var(--paper-lift);
+  border-radius:var(--rad-card);padding:24px;
+  transition:transform .5s var(--spring),background-color .45s ease;
+}
+.card h3{font-family:var(--disp);font-size:1.25rem;font-weight:600;font-variation-settings:"WONK" 1;margin-bottom:8px}
+.card p{font-size:.93rem;color:var(--ink-soft)}
+.card:hover .hatch{--lx:13px;--ly:16px;--lr:.9deg}
+.card:hover .face{transform:translate(-2px,-3px) rotate(-.25deg)}
+.card--pinned{--lx:3px;--ly:4px;--lr:.3deg}
+.pin{
+  position:absolute;top:-10px;left:50%;z-index:4;width:22px;height:22px;
+  transform:translateX(-50%) rotate(-5deg);
+  border:3px solid var(--red);background:var(--paper-lift);
+  border-radius:46% 54% 50% 50% / 52% 48% 55% 45%;filter:var(--f2);
+}
+.card--pressed{--lx:0px;--ly:0px}
+.card--pressed .hatch{opacity:0}
+.card--pressed .face{transform:translateY(2px)}
+.card--pressed .smudge{
+  position:absolute;left:8px;right:8px;top:6px;height:15px;pointer-events:none;z-index:2;
+  background:repeating-linear-gradient(var(--hatch-angle),transparent 0 3px,var(--hatch) 3px 4px);
+  -webkit-mask:linear-gradient(#000,transparent);mask:linear-gradient(#000,transparent);
+  filter:var(--f1);opacity:.65;border-radius:8px;
+}
+.depth-note{position:absolute;right:-16px;top:-48px;max-width:190px;font-size:1rem}
+.arrow-anno{position:absolute;right:36px;top:-16px;width:64px;overflow:visible}
+.arrow-anno path{stroke:var(--red);stroke-width:2.4;fill:none;stroke-linecap:round;filter:var(--f1)}
+
+.htokens{display:flex;gap:22px;flex-wrap:wrap;margin-top:40px}
+.ht{display:grid;gap:8px;justify-items:center}
+.ht-box{width:56px;height:40px;border-radius:10px;position:relative;
+  background:repeating-linear-gradient(var(--hatch-angle),
+    transparent 0 var(--gap),var(--hatch) var(--gap) calc(var(--gap) + 1.1px));}
+.ht .mono{font-size:.58rem}
+
+.dim{position:relative;max-width:430px;margin:44px auto 0;text-align:center}
+.dim svg{width:100%;height:26px;overflow:visible;display:block}
+.dim .dim-line,.dim .dim-tick{stroke:var(--blue);fill:none;stroke-width:2}
+.dim .dim-arrow{fill:var(--blue);stroke:none}
+.dim-label{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  background:var(--paper);padding:2px 12px;font-size:.64rem;white-space:nowrap;
+  transition:background-color .45s ease;border-radius:6px;
+}
+
+/* FIG 03 · controls */
+.controls-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
+.btn-row{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.btn{position:relative;z-index:0;background:none;border:0;padding:0;font:inherit;color:var(--ink);isolation:isolate}
+.btn .btn-label{
+  position:relative;z-index:1;display:inline-block;
+  padding:.78em 1.55em;background:var(--paper-lift);
+  font-weight:600;font-size:.98rem;border-radius:var(--rad-btn);
+  transition:transform .3s var(--spring),background-color .45s ease;
+}
+.btn .hatch{--lx:5px;--ly:6px;--lr:.5deg;--hatch-c:var(--hatch);border-radius:13px}
+.btn--primary{--btn-ink:var(--red);color:var(--red)}
+.btn--primary .hatch{--hatch-c:var(--red-ghost)}
+.btn:hover .btn-label{transform:translate(-1px,-1px)}
+.btn:active .btn-label{transform:translate(4px,5px)}
+.btn:active .hatch{--lx:1px;--ly:1px}
+.btn--sm .btn-label{padding:.5em 1.05em;font-size:.84rem}
+.scrib{position:relative;color:var(--blue);text-decoration:none;font-weight:500}
+.scrib::after{
+  content:"";position:absolute;left:-2%;right:-4%;bottom:0;height:3px;
+  background:repeating-linear-gradient(90deg,var(--blue) 0 5px,transparent 5px 8px);
+  transform:scaleX(0);transform-origin:left;transition:transform .45s var(--spring);
+}
+.scrib:hover::after{transform:scaleX(1)}
+
+.panel{position:relative;z-index:0}
+.panel .hatch{--lx:9px;--ly:11px}
+.panel-face{position:relative;z-index:1;background:var(--paper-lift);border-radius:var(--rad-panel);padding:28px;transition:background-color .45s ease}
+.tape{
+  position:absolute;z-index:5;width:88px;height:26px;pointer-events:none;opacity:.92;
+  background:repeating-linear-gradient(90deg,var(--tape) 0 6px,var(--tape) 6px 12px);
+  border:1.5px solid rgba(var(--ink-rgb),.16);filter:var(--f1);border-radius:3px;
+  clip-path:polygon(3% 0,97% 4%,100% 94%,2% 100%,0 68%,1% 28%);
+}
+.tape-l{top:-13px;left:30px;transform:rotate(-7deg)}
+.tape-r{top:-13px;right:34px;transform:rotate(5deg)}
+
+.field{margin-bottom:24px}
+.field label{display:block;margin-bottom:8px}
+.input-wrap{position:relative}
+.input{width:100%;background:none;border:0;font:inherit;font-size:1.05rem;padding:.45em .2em;color:var(--ink);caret-color:var(--red)}
+.input::placeholder{color:var(--ink-faint)}
+
+.check{display:flex;gap:.85em;align-items:center;margin-bottom:22px}
+.check input{position:absolute;opacity:0;width:1px;height:1px}
+.check .box{position:relative;flex:none;width:26px;height:26px}
+.check .tick{position:absolute;inset:1px;overflow:visible;filter:var(--f1);z-index:4}
+.check .tick path{
+  stroke:var(--red);stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .45s var(--spring) .05s;
+}
+.check input:checked + .box .tick path{stroke-dashoffset:0}
+.check input:focus-visible + .box{outline:2px dashed var(--blue);outline-offset:3px}
+.check .check-label{font-family:var(--note);color:var(--ink-soft);font-size:.98rem}
+
+.switch{display:inline-flex;align-items:center;gap:.85em;background:none;border:0;font:inherit;padding:.2em;margin-bottom:26px}
+.track{position:relative;flex:none;width:56px;height:30px}
+.knob{
+  position:absolute;top:3px;left:4px;width:22px;height:22px;background:var(--paper-lift);
+  transition:transform .45s var(--spring),background .3s;
+}
+.switch.on .knob{
+  transform:translateX(26px);
+  background:repeating-linear-gradient(var(--hatch-angle),transparent 0 2.4px,var(--hatch) 2.4px 3.3px),var(--paper-lift);
+}
+.switch .switch-label{font-family:var(--note);color:var(--ink-soft);font-size:.98rem}
+
+.meter{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;margin-top:38px;max-width:440px}
+.meter-box{position:relative;height:16px}
+.meter-fill{
+  position:absolute;top:2.5px;bottom:2.5px;left:2.5px;width:0;z-index:1;border-radius:6px;
+  background:repeating-linear-gradient(var(--hatch-angle),transparent 0 2.6px,var(--hatch) 2.6px 3.6px);
+  filter:var(--f1);transition:width 1.3s var(--ink-ease) .4s;
+}
+.play .meter-fill{width:86%}
+.meter-k,.meter-v{font-size:.64rem;white-space:nowrap}
+
+/* FIG 04 · instruments */
+.tray{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.tool{position:relative}
+.tool:hover,.tool:focus-within{z-index:6}
+.tool-btn{
+  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:9px;width:100%;padding:20px 10px 16px;background:var(--paper-lift);
+  border:0;border-radius:var(--rad-card);font:inherit;color:var(--ink);
+  transition:transform .45s var(--spring),background-color .45s ease;
+}
+.tool-btn:hover{transform:translateY(-3px) rotate(-.5deg)}
+.tool-btn.active{transform:translateY(-2px) rotate(-.8deg)}
+.tool-btn.active::after{
+  content:"";position:absolute;inset:3px;pointer-events:none;border-radius:inherit;
+  background:repeating-linear-gradient(var(--hatch-angle),transparent 0 3px,rgba(var(--ink-rgb),.16) 3px 4px);
+}
+.tool-btn.active .tool-k{color:var(--red)}
+.tool-ico{width:32px;height:32px;overflow:visible;filter:var(--f1);transition:transform .45s var(--spring)}
+.tool-ico *{fill:none;stroke:var(--ink);stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+.tool-btn:hover .tool-ico{transform:rotate(-7deg) scale(1.1)}
+.tool-k{font-size:.6rem;letter-spacing:.16em;color:var(--ink-soft)}
+.tip{
+  position:absolute;bottom:calc(100% + 12px);left:50%;
+  transform:translateX(-50%) translateY(6px) rotate(-2deg);
+  opacity:0;pointer-events:none;white-space:nowrap;z-index:7;
+  background:var(--paper-lift);padding:.4em .8em;border-radius:10px;
+  font-size:.88rem;transition:opacity .3s ease,transform .4s var(--spring);
+}
+.tip::after{
+  content:"";position:absolute;top:100%;left:50%;width:9px;height:9px;
+  background:var(--paper-lift);border-right:1.8px solid var(--ink);border-bottom:1.8px solid var(--ink);
+  transform:translate(-50%,-5.5px) rotate(45deg);
+}
+.tool-btn:hover .tip,.tool-btn:focus-visible .tip{opacity:1;transform:translateX(-50%) translateY(0) rotate(-2deg)}
+
+.anatomy{width:100%;max-width:620px;margin:40px auto 0;overflow:visible;display:block}
+.anatomy .an-lead{stroke:var(--blue);stroke-width:1.4;fill:none}
+.anatomy .an-dot{fill:var(--blue)}
+.anatomy .an-lbl{font-family:var(--mono);font-size:9px;fill:var(--blue);letter-spacing:.14em;text-anchor:middle}
+.tray-note{margin-top:22px}
+
+/* FIG 05 · type */
+.specimen{
+  font-family:var(--disp);font-weight:600;line-height:1.02;letter-spacing:-.01em;
+  font-size:clamp(2.6rem,7vw,5.4rem);margin:10px 0 26px;
+  font-variation-settings:"opsz" 144,"SOFT" 0,"WONK" 0;
+  transition:font-variation-settings .4s ease;
+}
+.specimen.wonky{font-variation-settings:"opsz" 144,"SOFT" 55,"WONK" 1}
+.type-meta{list-style:none;margin-top:26px;display:grid;gap:8px}
+.type-meta li{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;color:var(--ink-soft)}
+.type-meta b{color:var(--ink)}
+.type-note{margin-top:22px;font-size:1.05rem;max-width:24em}
+.doodle-spiral{bottom:36px;right:4%;transform:rotate(-11deg)}
+.doodle-spiral path{stroke:var(--blue);stroke-width:2.4}
+
+/* FIG 06 · motion */
+.laws{list-style:none;display:grid;gap:14px;margin-bottom:34px;max-width:44em}
+.laws li{display:flex;gap:14px;align-items:baseline;font-size:1.02rem}
+.laws span{font-family:var(--mono);font-weight:700;color:var(--red);font-size:.8rem;letter-spacing:.1em;flex:none}
+.motion-row{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.scribble-demo{width:min(560px,100%);overflow:visible}
+.scribble-demo .draw{stroke:var(--ink);stroke-width:3;fill:none;stroke-linecap:round;filter:var(--f1)}
+.play .scribble-demo .draw{animation-duration:1.5s}
+.doodle-arrow{top:26px;right:7%;transform:rotate(4deg);width:58px}
+.doodle-arrow path{stroke:var(--red);stroke-width:2.6}
+
+/* ── 07 · TITLE BLOCK · HUD ──────────────────────────────────── */
+.titleblock{position:relative;z-index:1;padding-block:64px 56px}
+.tb{position:relative;z-index:0}
+.tb .hatch{--lx:10px;--ly:12px}
+.tb-face{position:relative;z-index:1;background:var(--paper-lift);border-radius:var(--rad-card);transition:background-color .45s ease}
+.tb-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.cell{padding:14px 18px;border-right:1.5px solid var(--ink-faint);border-bottom:1.5px solid var(--ink-faint)}
+.cell:nth-child(4n){border-right:0}
+.cell:nth-child(n+5){border-bottom:0}
+.cell-k{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.cell-v{font-weight:600;font-size:.95rem}
+.tb-stamp{position:absolute;right:4%;top:-26px;z-index:5;margin-left:0}
+.curl{position:absolute;right:-6px;bottom:-6px;width:54px;z-index:4;filter:var(--f1)}
+.curl .curl-flap{fill:var(--paper-deep)}
+.curl .curl-edge{fill:none;stroke:var(--ink);stroke-width:2}
+.curl .curl-shade{fill:none;stroke:var(--blue-ghost);stroke-width:2}
+.colophon{margin-top:32px;text-align:center;font-family:var(--mono);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);line-height:2}
+
+.toast{
+  position:fixed;left:50%;bottom:30px;z-index:90;pointer-events:none;
+  display:flex;align-items:center;gap:10px;background:var(--paper-lift);
+  padding:.8em 1.3em;border-radius:var(--rad-btn);font-weight:500;max-width:calc(100vw - 40px);
+  opacity:0;transform:translateX(-50%) translateY(16px) rotate(-1deg);
+  transition:transform .5s var(--spring),opacity .35s ease,background-color .45s ease;
+}
+.toast svg{width:20px;height:20px;overflow:visible;filter:var(--f1);flex:none}
+.toast-tick{stroke:var(--red);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0) rotate(-.5deg)}
+.toast.show .toast-tick{animation:draw .5s .15s var(--ink-ease) forwards}
+
+.tool-chip{
+  position:fixed;left:22px;bottom:22px;z-index:90;background:var(--paper-lift);
+  padding:.75em 1.05em;border-radius:var(--rad-btn);max-width:min(360px,calc(100vw - 44px));
+}
+.tool-chip::before{content:"";position:absolute;inset:0;border:2px solid var(--ink);border-radius:inherit;filter:var(--f1)}
+.chip-main{display:block;font-size:.66rem;letter-spacing:.12em;color:var(--ink);text-transform:uppercase}
+.chip-esc{display:block;margin-top:5px;font-size:.56rem;color:var(--ink-soft);letter-spacing:.14em;text-transform:uppercase}
+
+body.smudge{--f1:url(#wob2);--f2:url(#wob3)}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width:900px){
+  .principles{grid-template-columns:1fr}
+  .pass-grid,.depth-grid,.controls-grid{grid-template-columns:1fr}
+  .tray{grid-template-columns:repeat(2,1fr)}
+  .depth-note,.arrow-anno,.guide,.doodle{display:none}
+}
+@media (max-width:720px){
+  .reg{display:none}
+  .tb-grid{grid-template-columns:repeat(2,1fr)}
+  .cell:nth-child(4n){border-right:1.5px solid var(--ink-faint)}
+  .cell:nth-child(2n){border-right:0}
+  .cell:nth-child(n+5){border-bottom:1.5px solid var(--ink-faint)}
+  .cell:nth-child(n+7){border-bottom:0}
+  .stamp{margin-left:0}
+  .meter{grid-template-columns:1fr;gap:8px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .settle{opacity:1;transform:none}
+  .draw{stroke-dashoffset:0}
+  .play .meter-fill{width:86%}
+  html{scroll-behavior:auto}
+}
+@media print{
+  :root,.dark{
+    --desk:#fff;--paper:#fff;--paper-lift:#fff;--paper-deep:#eee;
+    --ink:#1c1a17;--ink-rgb:28,26,23;--ink-soft:#444;--ink-faint:rgba(28,26,23,.3);
+    --blue:#2c567f;--red:#a8381f;--stain-rgb:140,110,80;
+  }
+  body::after,.progress,.tool-chip,.toast,.guide,.edge-title,.reg,
+  .stain,.creases,.skip,.mark{display:none!important}
+  .desk{padding:0}
+  .sheet-hatch{display:none}
+  .sheet-face{box-shadow:none}
+  .settle{opacity:1;transform:none}
+}
+</style>
 </head>
-<body>
-  <div class="demo-container">
-    <h1>Sketchmorphism Demo</h1>
-    <!-- ── SKM GRAPH · line chart · 560×340 ───────────────────────── -->
-    <svg class="skm-graph" viewBox="0 0 560 340" role="img" aria-labelledby="skm-grp-t skm-grp-d"
-         style="width:100%;max-width:720px;height:auto">
-      <title id="skm-grp-t">Shipments, January to June</title>
-      <desc id="skm-grp-d">Hand-drawn line chart rising from 32 in January to a peak of 84 in June.</desc>
 
-      <style>
-        .skm-graph text{font-family:'Space Mono',monospace;letter-spacing:.08em}
-        .ax{stroke:var(--blue,#47658c);stroke-width:2;fill:none;stroke-linecap:round}
-        .tk{stroke:var(--blue,#47658c);stroke-width:1.8}
-        .lb{fill:var(--blue,#47658c);font-size:10px}
-        .tt{fill:var(--ink,#2b2823);font-size:11px;font-weight:700}
-        .gl{stroke:var(--blue,#47658c);stroke-width:1;opacity:.16;fill:none}
-        .ser{stroke:var(--ink,#2b2823);stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
-        .pt{fill:var(--ink,#2b2823)}
-        .halo{fill:var(--paper,#f4efe3)}
-        .rd{stroke:var(--red,#c2402a)}
-        .rd-f{fill:var(--red,#c2402a)}
-        .dash{stroke-dasharray:3 6;opacity:.8}
-      </style>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
 
-      <defs>
-        <filter id="skm-grp-w1" x="-20%" y="-20%" width="140%" height="140%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.022 0.035" numOctaves="3" seed="7" result="n"/>
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
-        </filter>
-        <filter id="skm-grp-w2" x="-25%" y="-25%" width="150%" height="150%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.03 0.045" numOctaves="3" seed="11" result="n"/>
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5"/>
-        </filter>
-        <pattern id="skm-grp-grid" x="70" y="40" width="45" height="48" patternUnits="userSpaceOnUse">
-          <path class="gl" d="M45 0H0V48"/>
-        </pattern>
-        <clipPath id="skm-grp-plot"><rect x="70" y="40" width="450" height="240"/></clipPath>
-      </defs>
+<!-- ══ SHARED SVG LIBRARY ══ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wob1" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022 0.035" numOctaves="3" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
+    </filter>
+    <filter id="wob2" x="-25%" y="-25%" width="150%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03 0.045" numOctaves="3" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5"/>
+    </filter>
+    <filter id="wob3" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves="3" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="8.5"/>
+    </filter>
 
-      <!-- GRID -->
-      <rect x="70" y="40" width="450" height="240" fill="url(#skm-grp-grid)"/>
+    <symbol id="pen" viewBox="0 0 120 22">
+      <path d="M6 6.2c-2 .3-2 9.3 0 9.6l9 .4V5.8Z" style="fill:var(--pen-eraser,#ded3ba)"/>
+      <path d="M15 5.6h7v11h-7z" style="fill:var(--pen-band,#b9c6d8)"/>
+      <path d="M22 5 86 4.4l1.6 13.4L22 17.6Z" style="fill:var(--pen-body,#8b8478)"/>
+      <path d="M24 8.9 85 8.4M24 13.6l61-.5" fill="none" style="stroke:rgba(var(--ink-rgb),.32)" stroke-width="1.2"/>
+      <path d="M86 4.4 109 10.9 87.6 17.8Z" fill="#e7d5ad"/>
+      <path d="M101 8.6l8 2.3-7.4 2.7Z" style="fill:var(--pen-core,#2b2823)"/>
+      <path d="M6 6.2c-2 .3-2 9.3 0 9.6l9 .4.2-10.4Zm9-.6h7v11h-7zm7-.2 64-.6 1.6 13.4L22 17.6Zm64-.6 23 6.5-21.4 6.9Z"
+            fill="none" style="stroke:var(--ink)" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
 
-      <!-- AXES · construction blue, overshooting -->
-      <path class="ax" filter="url(#skm-grp-w1)" d="M 50 280.5 Q 285 279.2 538 280.3"/>
-      <path class="ax" filter="url(#skm-grp-w1)" d="M 69.6 298 Q 70.5 165 69.5 28"/>
-      <path class="tk" d="M70 280v7M160 280v7M250 280v7M340 280v7M430 280v7M520 280v7"/>
-      <path class="tk" d="M70 280h-7M70 222h-7M70 164h-7M70 106h-7M70 48h-7"/>
-      <text class="lb" x="70" y="300" text-anchor="middle">JAN</text>
-      <text class="lb" x="160" y="300" text-anchor="middle">FEB</text>
-      <text class="lb" x="250" y="300" text-anchor="middle">MAR</text>
-      <text class="lb" x="340" y="300" text-anchor="middle">APR</text>
-      <text class="lb" x="430" y="300" text-anchor="middle">MAY</text>
-      <text class="lb" x="520" y="300" text-anchor="middle">JUN</text>
-      <text class="lb" x="56" y="283" text-anchor="end">0</text>
-      <text class="lb" x="56" y="225" text-anchor="end">25</text>
-      <text class="lb" x="56" y="167" text-anchor="end">50</text>
-      <text class="lb" x="56" y="109" text-anchor="end">75</text>
-      <text class="lb" x="56" y="51" text-anchor="end">100</text>
+    <pattern id="hp" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(47)">
+      <line class="hp-line" x1="0" y1="0" x2="0" y2="7"/>
+    </pattern>
+  </defs>
+</svg>
 
-      <!-- DATA · graphite series -->
-      <path class="ax dash" d="M 520 85 V 280"/>
-      <path class="ser" filter="url(#skm-grp-w1)"
-            d="M 70 206 C 100 193 132 180 160 176 C 190 171 222 187 250 192 C 280 197 312 156 340 138 C 368 120 402 143 430 148 C 464 154 494 110 520 85"/>
-      <circle class="halo" cx="70"  cy="206" r="5.5"/><circle class="pt" cx="70"  cy="206" r="4"/>
-      <circle class="halo" cx="160" cy="176" r="5.5"/><circle class="pt" cx="160" cy="176" r="4"/>
-      <circle class="halo" cx="250" cy="192" r="5.5"/><circle class="pt" cx="250" cy="192" r="4"/>
-      <circle class="halo" cx="340" cy="138" r="5.5"/><circle class="pt" cx="340" cy="138" r="4"/>
-      <circle class="halo" cx="430" cy="148" r="5.5"/><circle class="pt" cx="430" cy="148" r="4"/>
-      <circle class="halo" cx="520" cy="85"  r="6"/>  <circle class="rd-f" cx="520" cy="85" r="4.4"/>
+<div class="progress" aria-hidden="true">
+  <div class="progress-stroke"></div>
+  <svg class="progress-pencil" viewBox="0 0 120 22">
+    <g transform="translate(120 0) scale(-1 1)"><use href="#pen" style="--pen-body:#d96a4e;--pen-core:#c2402a"/></g>
+  </svg>
+</div>
 
-      <!-- ANNOTATION · one red moment -->
-      <path class="rd" fill="none" stroke-width="2.4" stroke-linecap="round" filter="url(#skm-grp-w2)"
-            d="M 501 84 C 500 73 517 67 527 71 C 539 75 542 85 534 91 C 525 98 505 96 502 88 C 500 85 501 82 504 79"/>
-      <path class="rd" fill="none" stroke-width="2" stroke-linecap="round" d="M 497 74 Q 484 66 472 62"/>
-      <text class="lb" x="468" y="60" text-anchor="end" style="fill:var(--red,#c2402a)">PEAK · 84</text>
+<span class="guide guide-l" aria-hidden="true"></span>
+<span class="guide guide-r" aria-hidden="true"></span>
+<p class="edge-title" aria-hidden="true">Sketchmorphism · Spec 001 · Rev F</p>
 
-      <!-- TITLE -->
-      <text class="tt" x="70" y="20">SHIPMENTS — H1</text>
-      <path class="rd" fill="none" stroke-width="2.5" stroke-linecap="round" filter="url(#skm-grp-w1)" d="M 70 27 Q 93 25.8 116 26.8"/>
-    </svg>
-  </div>
+<!-- ══════════ THE SHEET ══════════ -->
+<div class="desk" id="desk">
+  <div class="sheet">
+    <span class="sheet-hatch" aria-hidden="true"></span>
+    <div class="sheet-face" id="sheetFace">
+
+      <svg class="creases" id="creases" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <svg class="ink-layer" id="inkLayer" aria-hidden="true">
+        <g id="inkMarks"></g>
+        <g id="inkStrokes"></g>
+      </svg>
+
+      <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+      <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+
+      <!-- ══════════ MASTHEAD ══════════ -->
+      <header class="sheet-head" data-reveal>
+        <div class="wrap">
+          <div class="masthead">
+            <a class="logo" href="#top" aria-label="Sketchmorphism — home">
+              <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+                <path d="M20 4c9 0 15 6 15 15S29 35 19 35 5 28 5 19 12 5 20 4c3 0 6 1 8 3"
+                      fill="none" stroke-width="3" stroke-linecap="round" style="stroke:var(--red)"/>
+              </svg>
+              <span class="logo-text">SKM<span class="logo-no">·01</span></span>
+            </a>
+            <div class="mast-right">
+              <nav class="nav" aria-label="Sections">
+                <a href="#principles">Principles</a>
+                <a href="#strokes">Strokes</a>
+                <a href="#depth">Depth</a>
+                <a href="#controls">Controls</a>
+                <a href="#icons">Playground</a>
+                <a href="#type">Type</a>
+                <a href="#motion">Motion</a>
+              </nav>
+              <button class="lamp" id="lampBtn" type="button" data-sk-border data-sk-r="10" aria-pressed="false" aria-label="Toggle dark mode" title="Toggle theme">
+                <svg viewBox="0 0 26 26" aria-hidden="true">
+                  <path class="moon" d="M20 15.5A8.5 8.5 0 1 1 10.5 4a7 7 0 0 0 9.5 11.5z"/>
+                  <g class="sun"><circle cx="13" cy="13" r="5"/><path d="M13 2.5v3M13 20.5v3M2.5 13h3M20.5 13h3M5.5 5.5l2 2M18.5 18.5l2 2M20.5 5.5l-2 2M7.5 18.5l-2 2"/></g>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <svg class="frule frule--mast" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true">
+            <path class="fr-line draw" pathLength="1" d="M-1 8H101"/>
+            <path class="fr-tick" d="M3 3v10M97 3v10"/>
+          </svg>
+
+          <div class="titlezone">
+            <svg class="stain stain--1" viewBox="0 0 200 200" aria-hidden="true">
+              <path class="s-a" d="M100 16c30-2 60 12 68 42 9 32-6 68-38 80-34 13-76 2-90-30-13-31 1-71 29-87 9-5 20-4 31-5"/>
+              <path class="s-b" d="M96 34c22-1 44 9 50 31 7 24-4 50-28 59-25 10-56 1-66-22-10-24 1-53 21-64"/>
+              <circle cx="158" cy="50" r="3"/><circle cx="44" cy="150" r="2.4"/>
+            </svg>
+
+            <div class="tz-copy">
+              <p class="kicker mono settle">Design language · Spec 001 · Rev F — Rounded Edition</p>
+
+              <h1 class="settle" style="--tilt:-.3deg">Sketchmorphism
+                <svg class="under" viewBox="0 0 640 34" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="draw u1" pathLength="1" d="M10 20C120 10 250 26 340 17S570 12 630 19"
+                        stroke-width="6" fill="none" stroke-linecap="round"/>
+                  <path class="draw u2" pathLength="1" d="M22 27C150 20 300 31 420 24S590 22 622 26"
+                        stroke-width="3.4" fill="none" stroke-linecap="round" style="animation-delay:.3s"/>
+                </svg>
+              </h1>
+
+              <p class="lede settle">An original interface language built on drawn strokes, hatched graphite
+                and a strict three-pencil palette. <strong>Human where it counts, disciplined where it ships</strong> —
+                and on this page, the sheet accepts your pencil too.</p>
+
+              <div class="head-meta settle">
+                <ul class="legend" aria-label="The three-pencil palette">
+                  <li><svg class="pencil pencil--ink" viewBox="0 0 120 22" aria-hidden="true"><use href="#pen"/></svg>graphite · content</li>
+                  <li><svg class="pencil pencil--blue" viewBox="0 0 120 22" aria-hidden="true"><use href="#pen"/></svg>blue · structure</li>
+                  <li><svg class="pencil pencil--red" viewBox="0 0 120 22" aria-hidden="true"><use href="#pen"/></svg>red · action</li>
+                </ul>
+                <span class="stamp" data-sk-border data-sk="red" data-sk-passes="2" data-sk-in="1" data-sk-r="9">Rev F · Rounded</span>
+              </div>
+
+              <svg class="ruler settle" viewBox="0 0 300 24" aria-hidden="true">
+                <path d="M2 18H298" stroke-width="2"/>
+                <path d="M2 18V9M52 18V12M102 18V9M152 18V12M202 18V9M252 18V12M298 18V9" stroke-width="2"/>
+                <text x="0" y="7">0</text><text x="98" y="7">2</text><text x="198" y="7">4</text><text x="292" y="7">6</text>
+              </svg>
+            </div>
+
+            <!-- hero emblem: hatched disc, construction geometry, crossing pencil -->
+            <svg class="hero-art settle" style="--tilt:.5deg" viewBox="0 0 340 268" aria-hidden="true">
+              <circle class="ha-con" cx="205" cy="118" r="104"/>
+              <circle class="ha-bg" cx="205" cy="118" r="86"/>
+              <g clip-path="url(#haclip)">
+                <rect x="105" y="18" width="200" height="200" fill="url(#hp)"/>
+              </g>
+              <clipPath id="haclip"><circle cx="205" cy="118" r="86"/></clipPath>
+              <path class="ha-ring draw" pathLength="1"
+                    d="M205 32c48 0 86 38 86 86s-38 86-86 86-86-38-86-86 36-86 84-86c6 0 12 1 17 2"/>
+              <g class="ha-dim">
+                <line x1="119" y1="236" x2="291" y2="236"/>
+                <line x1="119" y1="229" x2="119" y2="243"/>
+                <line x1="291" y1="229" x2="291" y2="243"/>
+                <text x="205" y="231" text-anchor="middle" style="paint-order:stroke;stroke:var(--paper);stroke-width:3px">Ø 172 · 47° hatch</text>
+              </g>
+              <path class="ha-accent" d="M300 30l16-14M306 44l20-9" filter="url(#wob1)"/>
+              <use href="#pen" width="290" height="53" x="6" y="150"
+                   transform="rotate(-31 150 176)"
+                   style="--pen-body:#d96a4e;--pen-core:#c2402a"/>
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <main id="main">
+        <!-- ══════════ FIG 00 · PRINCIPLES ══════════ -->
+        <section class="fig wrap" id="principles" data-reveal aria-labelledby="h-doctrine">
+          <svg class="doodle doodle-star" viewBox="0 0 40 40" aria-hidden="true">
+            <path d="M20 3v34M5 12l30 16M35 12 5 28"/>
+          </svg>
+          <header class="fig-head settle">
+            <p class="fig-kicker mono">
+              <span class="fig-tag">Fig. 00
+                <svg class="loop" viewBox="0 0 120 46" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="loop-p draw" pathLength="1" d="M14 26C10 12 34 6 62 6s48 7 46 18-28 16-60 15S12 32 18 17c3-6 13-9 24-10"/>
+                </svg>
+              </span>
+              <span class="fig-sub">— The doctrine</span>
+            </p>
+            <h2 id="h-doctrine">Seven laws, one hand</h2>
+            <svg class="frule" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true">
+              <path class="fr-line draw" pathLength="1" d="M-1 8H101"/>
+              <path class="fr-tick" d="M3 3v10M97 3v10"/>
+            </svg>
+          </header>
+          <ol class="principles">
+            <li class="settle"><span class="p-no" data-sk-border data-sk-r="8">01</span><div><h3>Stroke over border</h3><p>Edges are drawn strokes with pressure and curvature — never flat CSS borders.</p></div></li>
+            <li class="settle"><span class="p-no" data-sk-border data-sk-r="8">02</span><div><h3>Hatch over shadow</h3><p>Elevation is hatched graphite at 47°. No blur, no drop shadows.</p></div></li>
+            <li class="settle"><span class="p-no" data-sk-border data-sk-r="8">03</span><div><h3>Three pencils only</h3><p>Graphite carries content, non‑photo blue carries structure, red is reserved for action.</p></div></li>
+            <li class="settle"><span class="p-no" data-sk-border data-sk-r="8">04</span><div><h3>Pass count is hierarchy</h3><p>Importance is measured in retraced passes: one to whisper, two to speak, three to sign.</p></div></li>
+            <li class="settle"><span class="p-no" data-sk-border data-sk-r="8">05</span><div><h3>Visible construction</h3><p>Guides, ticks and figure numbers remain in the finished work.</p></div></li>
+            <li class="settle"><span class="p-no" data-sk-border data-sk-r="8">06</span><div><h3>One hand, no accidents</h3><p>All wobble comes from one calibrated hand. Imperfection is controlled, never random.</p></div></li>
+            <li class="settle"><span class="p-no" data-sk-border data-sk-r="8">07</span><div><h3>Redraw, don't animate</h3><p>Motion reads as drawing, settling or erasing. Springs arrive; they never perform.</p></div></li>
+          </ol>
+        </section>
+
+        <!-- ══════════ FIG 01 · STROKE TOKENS ══════════ -->
+        <section class="fig wrap" id="strokes" data-reveal aria-labelledby="h-strokes">
+          <header class="fig-head settle">
+            <p class="fig-kicker mono">
+              <span class="fig-tag">Fig. 01
+                <svg class="loop" viewBox="0 0 120 46" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="loop-p draw" pathLength="1" d="M14 26C10 12 34 6 62 6s48 7 46 18-28 16-60 15S12 32 18 17c3-6 13-9 24-10"/>
+                </svg>
+              </span>
+              <span class="fig-sub">— Stroke tokens</span>
+            </p>
+            <h2 id="h-strokes">Hierarchy by retracing</h2>
+            <svg class="frule" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true">
+              <path class="fr-line draw" pathLength="1" d="M-1 8H101"/>
+              <path class="fr-tick" d="M3 3v10M97 3v10"/>
+            </svg>
+          </header>
+          <div class="pass-grid">
+            <div class="pass settle" style="--tilt:-.4deg">
+              <div class="face" data-sk-border data-sk-r="14" data-sk-passes="1"><span class="mono">Pass 01</span><strong>Quiet</strong><p>Single line. Body containers and supporting surfaces.</p></div>
+            </div>
+            <div class="pass settle" style="--tilt:.5deg">
+              <div class="face" data-sk-border data-sk-r="14" data-sk-passes="2"><span class="mono">Pass 02</span><strong>Spoken</strong><p>Retraced once, slightly off‑register. Cards and headings.</p></div>
+            </div>
+            <div class="pass settle" style="--tilt:-.3deg">
+              <div class="face" data-sk-border data-sk-r="14" data-sk-passes="3"><span class="mono">Pass 03</span><strong>Signed</strong><p>Three passes. Reserved for the one action that must not be missed.</p></div>
+            </div>
+          </div>
+
+          <div class="wscale">
+            <div class="ws settle">
+              <svg viewBox="0 0 240 12" preserveAspectRatio="none" aria-hidden="true">
+                <path class="ws-p draw" pathLength="1" stroke-width="1.6" d="M3 6C60 4.4 120 7.6 237 6"/></svg>
+              <span class="mono">S1 · 1.6 — captions</span>
+            </div>
+            <div class="ws settle">
+              <svg viewBox="0 0 240 12" preserveAspectRatio="none" aria-hidden="true">
+                <path class="ws-p draw" pathLength="1" stroke-width="2.4" d="M3 6C60 4.2 120 7.8 237 6"/></svg>
+              <span class="mono">S2 · 2.4 — chrome</span>
+            </div>
+            <div class="ws settle">
+              <svg viewBox="0 0 240 12" preserveAspectRatio="none" aria-hidden="true">
+                <path class="ws-p draw" pathLength="1" stroke-width="3.2" d="M3 6C60 4 120 8 237 6"/></svg>
+              <span class="mono">S3 · 3.2 — emphasis</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════ FIG 02 · DEPTH TOKENS ══════════ -->
+        <section class="fig wrap" id="depth" data-reveal aria-labelledby="h-depth">
+          <header class="fig-head settle">
+            <p class="fig-kicker mono">
+              <span class="fig-tag">Fig. 02
+                <svg class="loop" viewBox="0 0 120 46" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="loop-p draw" pathLength="1" d="M14 26C10 12 34 6 62 6s48 7 46 18-28 16-60 15S12 32 18 17c3-6 13-9 24-10"/>
+                </svg>
+              </span>
+              <span class="fig-sub">— Depth tokens</span>
+            </p>
+            <h2 id="h-depth">Elevation, hatched by hand</h2>
+            <svg class="frule" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true">
+              <path class="fr-line draw" pathLength="1" d="M-1 8H101"/>
+              <path class="fr-tick" d="M3 3v10M97 3v10"/>
+            </svg>
+          </header>
+          <div class="depth-grid">
+            <p class="note depth-note settle" style="--tilt:2.5deg">elevation drawn as eleven lines — no blur involved.</p>
+            <svg class="arrow-anno" viewBox="0 0 90 70" aria-hidden="true">
+              <path d="M8 6C30 28 42 42 64 56"/>
+              <path d="M52 50l14 8-3-16"/>
+            </svg>
+
+            <article class="card settle" style="--tilt:-.5deg">
+              <span class="hatch" aria-hidden="true"></span>
+              <div class="face" data-sk-border data-sk-r="14">
+                <h3>Lifted</h3>
+                <p>Rides above the paper on a graphite hatch. Hover — it leans further out and the hatch stretches to keep up.</p>
+              </div>
+            </article>
+
+            <article class="card card--pinned settle" style="--tilt:.6deg">
+              <span class="pin" aria-hidden="true"></span>
+              <span class="hatch" aria-hidden="true"></span>
+              <div class="face" data-sk-border data-sk-r="14">
+                <h3>Pinned</h3>
+                <p>Held flat by a single red pin. Only a thin escape of hatch is permitted at the edges.</p>
+              </div>
+            </article>
+
+            <article class="card card--pressed settle" style="--tilt:-.35deg">
+              <span class="hatch" aria-hidden="true"></span>
+              <div class="face" data-sk-border data-sk-r="14">
+                <span class="smudge" aria-hidden="true"></span>
+                <h3>Pressed</h3>
+                <p>Pushed into the sheet instead of above it. Its hatch lives on top, smudged toward the corner.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="htokens settle" aria-label="Hatch density tokens">
+            <div class="ht"><span class="ht-box" data-sk-border data-sk-r="10" style="--gap:6px"></span><span class="mono">H1 · rest</span></div>
+            <div class="ht"><span class="ht-box" data-sk-border data-sk-r="10" style="--gap:5px"></span><span class="mono">H2 · hover</span></div>
+            <div class="ht"><span class="ht-box" data-sk-border data-sk-r="10" style="--gap:4.2px"></span><span class="mono">H3 · lifted</span></div>
+            <div class="ht"><span class="ht-box" data-sk-border data-sk-r="10" style="--gap:3.6px"></span><span class="mono">H4 · floating</span></div>
+            <div class="ht"><span class="ht-box" data-sk-border data-sk-r="10" style="--gap:3px"></span><span class="mono">H5 · emphasis</span></div>
+          </div>
+
+          <div class="dim settle" aria-hidden="true">
+            <svg viewBox="0 0 400 26" preserveAspectRatio="none">
+              <path class="dim-line" d="M10 14H390"/>
+              <path class="dim-tick" d="M10 5v18M390 5v18"/>
+              <path class="dim-arrow" d="M10 14l14-5.5v11zM390 14l-14-5.5v11z"/>
+            </svg>
+            <span class="mono dim-label">lift 8px → hover 13px · fixed 47° hand</span>
+          </div>
+        </section>
+
+        <!-- ══════════ FIG 03 · CONTROLS ══════════ -->
+        <section class="fig wrap" id="controls" data-reveal aria-labelledby="h-controls">
+          <header class="fig-head settle">
+            <p class="fig-kicker mono">
+              <span class="fig-tag">Fig. 03
+                <svg class="loop" viewBox="0 0 120 46" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="loop-p draw" pathLength="1" d="M14 26C10 12 34 6 62 6s48 7 46 18-28 16-60 15S12 32 18 17c3-6 13-9 24-10"/>
+                </svg>
+              </span>
+              <span class="fig-sub">— Controls</span>
+            </p>
+            <h2 id="h-controls">Every control, drawn to spec</h2>
+            <svg class="frule" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true">
+              <path class="fr-line draw" pathLength="1" d="M-1 8H101"/>
+              <path class="fr-tick" d="M3 3v10M97 3v10"/>
+            </svg>
+          </header>
+          <div class="controls-grid">
+            <div>
+              <p style="max-width:26em;color:var(--ink-soft)">Primary actions are double‑passed in red and rest on their own hatch. Press one and it sinks <em>into</em> the hatch — the paper accepts the pressure.</p>
+              <div class="btn-row" style="margin-top:26px">
+                <button class="btn btn--primary settle" style="--tilt:-.6deg" type="button">
+                  <span class="hatch" aria-hidden="true"></span><span class="btn-label" data-sk-border data-sk-r="12" data-sk="red" data-sk-passes="2">Confirm changes</span>
+                </button>
+                <button class="btn settle" style="--tilt:.4deg" type="button">
+                  <span class="hatch" aria-hidden="true"></span><span class="btn-label" data-sk-border data-sk-r="12">Keep editing</span>
+                </button>
+              </div>
+              <p style="margin-top:24px"><a class="scrib" href="#icons">try the live playground ↓</a></p>
+
+              <div class="meter settle">
+                <span class="mono meter-k">spec coverage</span>
+                <div class="meter-box" data-sk-border data-sk-r="8" role="img" aria-label="Spec coverage: 86 percent">
+                  <span class="meter-fill" aria-hidden="true"></span>
+                </div>
+                <span class="mono meter-v">86%</span>
+              </div>
+
+              <p class="note settle" style="--tilt:-2deg;margin-top:34px">the caret is red. small joys.</p>
+            </div>
+
+            <div class="panel settle" style="--tilt:.4deg">
+              <span class="tape tape-l" aria-hidden="true"></span>
+              <span class="tape tape-r" aria-hidden="true"></span>
+              <span class="hatch" aria-hidden="true"></span>
+              <form class="panel-face" id="fileForm" data-sk-border data-sk-r="16">
+                <div class="field">
+                  <label class="note" for="nm">Your name</label>
+                  <div class="input-wrap" data-sk-border="line">
+                    <input class="input" id="nm" name="name" type="text" placeholder="Ada Lovelace" autocomplete="name">
+                  </div>
+                </div>
+
+                <label class="check">
+                  <input type="checkbox">
+                  <span class="box" data-sk-border data-sk-r="8" aria-hidden="true">
+                    <svg class="tick" viewBox="0 0 24 24"><path pathLength="1" d="M4 13.2 9.4 18.6 20 6.4"/></svg>
+                  </span>
+                  <span class="check-label">Email me the spec sheet</span>
+                </label>
+
+                <button class="switch" id="smudgeSw" type="button" role="switch" aria-checked="false">
+                  <span class="track" data-sk-border data-sk-shape="loop" aria-hidden="true">
+                    <span class="knob" data-sk-border data-sk-shape="loop"></span>
+                  </span>
+                  <span class="switch-label">Smudge mode — a looser hand</span>
+                </button>
+
+                <div>
+                  <button class="btn btn--primary btn--sm" type="submit">
+                    <span class="hatch" aria-hidden="true"></span><span class="btn-label" data-sk-border data-sk-r="12" data-sk="red" data-sk-passes="2">Request access</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════ FIG 04 · PLAYGROUND ══════════ -->
+        <section class="fig wrap" id="icons" data-reveal aria-labelledby="h-tray">
+          <header class="fig-head settle">
+            <p class="fig-kicker mono">
+              <span class="fig-tag">Fig. 04
+                <svg class="loop" viewBox="0 0 120 46" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="loop-p draw" pathLength="1" d="M14 26C10 12 34 6 62 6s48 7 46 18-28 16-60 15S12 32 18 17c3-6 13-9 24-10"/>
+                </svg>
+              </span>
+              <span class="fig-sub">— Live playground</span>
+            </p>
+            <h2 id="h-tray">Draw directly on this sheet</h2>
+            <svg class="frule" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true">
+              <path class="fr-line draw" pathLength="1" d="M-1 8H101"/>
+              <path class="fr-tick" d="M3 3v10M97 3v10"/>
+            </svg>
+          </header>
+
+          <ul class="tray">
+            <li class="tool settle" style="--tilt:-.5deg">
+              <button class="tool-btn" type="button" data-tool="draw" aria-pressed="false" aria-label="Graphite draw tool">
+                <svg class="tool-ico" viewBox="0 0 28 28" aria-hidden="true">
+                  <path d="M5 23l1-5L18.5 5.5a2.1 2.1 0 0 1 3 0l1 1a2.1 2.1 0 0 1 0 3L10 22l-5 1z"/><path d="M16.5 7.5l4 4"/>
+                </svg>
+                <span class="mono tool-k">draw</span>
+                <span class="tip note" aria-hidden="true">freehand graphite — drag anywhere</span>
+              </button>
+            </li>
+            <li class="tool settle" style="--tilt:.4deg">
+              <button class="tool-btn" type="button" data-tool="fix" aria-pressed="false" aria-label="Eraser tool">
+                <svg class="tool-ico" viewBox="0 0 28 28" aria-hidden="true">
+                  <path d="M3.5 18.5 13 9l6 6-9.5 9.5H6z"/><path d="M9.5 14.5l4 4"/>
+                </svg>
+                <span class="mono tool-k">fix</span>
+                <span class="tip note" aria-hidden="true">drag across marks to erase them</span>
+              </button>
+            </li>
+            <li class="tool settle" style="--tilt:-.3deg">
+              <button class="tool-btn" type="button" data-tool="measure" aria-pressed="false" aria-label="Measure tool">
+                <svg class="tool-ico" viewBox="0 0 28 28" aria-hidden="true">
+                  <path d="M4 20 20 4l4 4L8 24z"/><path d="M10 14l2 2M13 11l2 2M16 8l2 2"/>
+                </svg>
+                <span class="mono tool-k">measure</span>
+                <span class="tip note" aria-hidden="true">construction lines, snapped to 47°</span>
+              </button>
+            </li>
+            <li class="tool settle" style="--tilt:.5deg">
+              <button class="tool-btn" type="button" data-tool="pin" aria-pressed="false" aria-label="Pin tool">
+                <svg class="tool-ico" viewBox="0 0 28 28" aria-hidden="true">
+                  <circle cx="14" cy="10.5" r="5.5"/><path d="M14 16v9"/>
+                </svg>
+                <span class="mono tool-k">hold</span>
+                <span class="tip note" aria-hidden="true">ships in a later revision</span>
+              </button>
+            </li>
+            <li class="tool settle" style="--tilt:.4deg">
+              <button class="tool-btn" type="button" data-tool="eye" aria-pressed="false" aria-label="Inspect tool">
+                <svg class="tool-ico" viewBox="0 0 28 28" aria-hidden="true">
+                  <path d="M2.5 14S7 7.5 14 7.5 25.5 14 25.5 14 21 20.5 14 20.5 2.5 14 2.5 14z"/><circle cx="14" cy="14" r="2.6"/>
+                </svg>
+                <span class="mono tool-k">inspect</span>
+                <span class="tip note" aria-hidden="true">contrast checked, kerning approved</span>
+              </button>
+            </li>
+            <li class="tool settle" style="--tilt:-.4deg">
+              <button class="tool-btn" type="button" data-tool="reward" aria-pressed="false" aria-label="Reward tool">
+                <svg class="tool-ico" viewBox="0 0 28 28" aria-hidden="true">
+                  <path d="M14 3.5l3.1 6.4 7 1-5 5 1.2 7-6.3-3.3L7.7 23l1.2-7-5-5 7-1z"/>
+                </svg>
+                <span class="mono tool-k">reward</span>
+                <span class="tip note" aria-hidden="true">reserved for shipped work</span>
+              </button>
+            </li>
+            <li class="tool settle" style="--tilt:.3deg">
+              <button class="tool-btn" type="button" data-tool="discard" aria-label="Discard — clears the sheet">
+                <svg class="tool-ico" viewBox="0 0 28 28" aria-hidden="true">
+                  <path d="M5 8h18M11 8V5.5h6V8M7.5 8l1 16h11l1-16"/><path d="M12 12v7M16 12v7"/>
+                </svg>
+                <span class="mono tool-k">discard</span>
+                <span class="tip note" aria-hidden="true">crumples the sheet and starts fresh</span>
+              </button>
+            </li>
+            <li class="tool settle" style="--tilt:-.5deg">
+              <button class="tool-btn" type="button" data-tool="send" aria-pressed="false" aria-label="Send tool">
+                <svg class="tool-ico" viewBox="0 0 28 28" aria-hidden="true">
+                  <path d="M3.5 7h21v14h-21z"/><path d="M3.5 8l10.5 8L24.5 8"/>
+                </svg>
+                <span class="mono tool-k">send</span>
+                <span class="tip note" aria-hidden="true">wired to your inbox in production</span>
+              </button>
+            </li>
+          </ul>
+
+          <!-- pencil anatomy -->
+          <svg class="anatomy settle" viewBox="0 0 560 152" aria-label="Anatomy of the standard pencil: eraser, ferrule, body, wood, core">
+            <use href="#pen" x="60" y="50" width="440" height="81"
+                 style="--pen-body:#8b8478;--pen-core:#2b2823"/>
+            <g>
+              <circle class="an-dot" cx="98" cy="50" r="2.2"/><line class="an-lead" x1="98" y1="48" x2="98" y2="24"/>
+              <text class="an-lbl" x="98" y="16">ERASER</text>
+              <circle class="an-dot" cx="132" cy="131" r="2.2"/><line class="an-lead" x1="132" y1="133" x2="132" y2="142"/>
+              <text class="an-lbl" x="132" y="150">FERRULE</text>
+              <circle class="an-dot" cx="262" cy="50" r="2.2"/><line class="an-lead" x1="262" y1="48" x2="262" y2="24"/>
+              <text class="an-lbl" x="262" y="16">LACQUERED BODY</text>
+              <circle class="an-dot" cx="418" cy="131" r="2.2"/><line class="an-lead" x1="418" y1="133" x2="418" y2="142"/>
+              <text class="an-lbl" x="418" y="150">SHARPENED WOOD</text>
+              <circle class="an-dot" cx="452" cy="50" r="2.2"/><line class="an-lead" x1="452" y1="48" x2="452" y2="24"/>
+              <text class="an-lbl" x="452" y="16">GRAPHITE CORE</text>
+            </g>
+          </svg>
+
+          <p class="note tray-note settle" style="--tilt:1.2deg">Draw, Fix and Measure are live on this sheet. Every mark supports ⌘Z — Discard starts a fresh one.</p>
+        </section>
+
+        <!-- ══════════ FIG 05 · TYPE ══════════ -->
+        <section class="fig wrap" id="type" data-reveal aria-labelledby="h-type">
+          <svg class="doodle doodle-spiral" viewBox="0 0 46 46" aria-hidden="true">
+            <path d="M33 25c2 8-9 13-15 7s-2-16 7-18 20 4 19 14-12 21-24 18S1 33 7 21 27 2 38 9"/>
+          </svg>
+          <header class="fig-head settle">
+            <p class="fig-kicker mono">
+              <span class="fig-tag">Fig. 05
+                <svg class="loop" viewBox="0 0 120 46" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="loop-p draw" pathLength="1" d="M14 26C10 12 34 6 62 6s48 7 46 18-28 16-60 15S12 32 18 17c3-6 13-9 24-10"/>
+                </svg>
+              </span>
+              <span class="fig-sub">— Type</span>
+            </p>
+            <h2 id="h-type">Drawn chrome, grown‑up text</h2>
+            <svg class="frule" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true">
+              <path class="fr-line draw" pathLength="1" d="M-1 8H101"/>
+              <path class="fr-tick" d="M3 3v10M97 3v10"/>
+            </svg>
+          </header>
+
+          <p class="specimen wonky settle" id="specimen" style="--tilt:-.2deg">Wonk is a feature.</p>
+
+          <button class="btn btn--sm settle" id="wonkBtn" type="button">
+            <span class="hatch" aria-hidden="true"></span><span class="btn-label" data-sk-border data-sk-r="12">steady hand</span>
+          </button>
+
+          <ul class="type-meta settle">
+            <li><b>Display</b> — Fraunces, wonk axis engaged</li>
+            <li><b>Body</b> — Schibsted Grotesk, keeps its posture</li>
+            <li><b>Margin notes</b> — Shantell Sans, the human voice</li>
+            <li><b>Measurements</b> — Space Mono, for the title block</li>
+          </ul>
+
+          <p class="note type-note settle" style="--tilt:1.5deg">margin notes carry the human voice — the type itself stays disciplined.</p>
+        </section>
+
+        <!-- ══════════ FIG 06 · MOTION ══════════ -->
+        <section class="fig wrap" id="motion" data-reveal aria-labelledby="h-motion">
+          <svg class="doodle doodle-arrow" viewBox="0 0 52 40" aria-hidden="true">
+            <path d="M8 26c-4-4 2-10 6-6s-2 9-6 8c10 6 26 4 33-8m0 0-2 9m2-9-9 2"/>
+          </svg>
+          <header class="fig-head settle">
+            <p class="fig-kicker mono">
+              <span class="fig-tag">Fig. 06
+                <svg class="loop" viewBox="0 0 120 46" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="loop-p draw" pathLength="1" d="M14 26C10 12 34 6 62 6s48 7 46 18-28 16-60 15S12 32 18 17c3-6 13-9 24-10"/>
+                </svg>
+              </span>
+              <span class="fig-sub">— Motion</span>
+            </p>
+            <h2 id="h-motion">Everything settles, nothing bounces</h2>
+            <svg class="frule" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true">
+              <path class="fr-line draw" pathLength="1" d="M-1 8H101"/>
+              <path class="fr-tick" d="M3 3v10M97 3v10"/>
+            </svg>
+          </header>
+
+          <ul class="laws">
+            <li class="settle"><span>LAW 01</span>Settle, never bounce. Springs end exactly where the element was meant to live.</li>
+            <li class="settle"><span>LAW 02</span>Redraw over reload. A state change looks re‑inked, not re‑rendered.</li>
+            <li class="settle"><span>LAW 03</span>Nothing decorates. If a line moves, it's because the paper asked.</li>
+          </ul>
+
+          <div class="motion-row">
+            <button class="btn btn--primary" id="redrawBtn" type="button">
+              <span class="hatch" aria-hidden="true"></span><span class="btn-label" data-sk-border data-sk-r="12" data-sk="red" data-sk-passes="2">Replay this figure</span>
+            </button>
+            <svg class="scribble-demo" viewBox="0 0 600 60" aria-hidden="true">
+              <path class="draw" pathLength="1"
+                    d="M8 38c40-24 70 22 110-6s60-28 100 2 70-30 110-4 60-26 100 0 60-22 100-2 50 12 64 8"/>
+            </svg>
+          </div>
+        </section>
+      </main>
+
+      <!-- ══════════ TITLE BLOCK ══════════ -->
+      <footer class="titleblock">
+        <div class="wrap" style="position:relative">
+          <svg class="stain stain--2" viewBox="0 0 200 200" aria-hidden="true">
+            <path class="s-a" d="M100 16c30-2 60 12 68 42 9 32-6 68-38 80-34 13-76 2-90-30-13-31 1-71 29-87 9-5 20-4 31-5"/>
+            <path class="s-b" d="M96 34c22-1 44 9 50 31 7 24-4 50-28 59-25 10-56 1-66-22-10-24 1-53 21-64"/>
+          </svg>
+          <div class="tb">
+            <span class="hatch" aria-hidden="true"></span>
+            <div class="tb-face" data-sk-border data-sk-r="14">
+              <div class="tb-grid">
+                <div class="cell"><span class="cell-k">Designed by</span><span class="cell-v">Vidit Patil</span></div>
+                <div class="cell"><span class="cell-k">Review</span><span class="cell-v">Pending</span></div>
+                <div class="cell"><span class="cell-k">Scale</span><span class="cell-v">1 : 1</span></div>
+                <div class="cell"><span class="cell-k">Date</span><span class="cell-v" id="date">—</span></div>
+                <div class="cell"><span class="cell-k">Sheet</span><span class="cell-v">01 / 01</span></div>
+                <div class="cell"><span class="cell-k">Revision</span><span class="cell-v">F — Rounded</span></div>
+                <div class="cell"><span class="cell-k">Medium</span><span class="cell-v">HTML · CSS · SVG</span></div>
+                <div class="cell"><span class="cell-k">Palette</span><span class="cell-v">Three pencils</span></div>
+              </div>
+            </div>
+            <svg class="curl" viewBox="0 0 64 64" aria-hidden="true">
+              <path class="curl-flap" d="M64 64H34c3-15 15-27 30-30Z"/>
+              <path class="curl-edge" d="M34 64c3-15 15-27 30-30"/>
+              <path class="curl-shade" d="M40 58c3-9 10-16 18-19"/>
+            </svg>
+            <span class="stamp tb-stamp" data-sk-border data-sk="red" data-sk-passes="2" data-sk-in="1" data-sk-r="9">Spec 001 · Live</span>
+          </div>
+          <p class="colophon">
+            © <span id="year">2025</span> Vidit Patil — Sketchmorphism is an original design language<br>
+            set in fraunces · schibsted grotesk · shantell sans · space mono
+          </p>
+        </div>
+      </footer>
+
+    </div><!-- /sheet-face -->
+  </div><!-- /sheet -->
+</div><!-- /desk -->
+
+<!-- HUD -->
+<div class="tool-chip" id="toolChip" hidden>
+  <span class="chip-main mono" id="chipTxt"></span>
+  <span class="chip-esc mono">esc — put it down · ⌘/ctrl z — undo last mark</span>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" data-sk-border data-sk-r="12">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path class="toast-tick" pathLength="1" d="M4 13.2 9.4 18.6 20 6.4"/></svg>
+  <span id="toastMsg">Request received.</span>
+</div>
+
+<noscript><style>
+  .settle{opacity:1;transform:none}.draw{stroke-dashoffset:0}.meter-fill{width:86%}
+  .btn-label,.panel-face,.pass .face,.card .face,.tool-btn,.tb-face,.meter-box,
+  .check .box,.p-no,.lamp,.toast,.tip,.track,.knob,.ht-box{border:2px solid var(--ink);border-radius:12px}
+  .stamp{border:2.5px solid var(--red);border-radius:9px}
+  .btn--primary .btn-label{border-color:var(--red)}
+  .input-wrap{border-bottom:2px solid var(--ink)}
+</style></noscript>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   SKETCHMORPHISM RUNTIME · REV F — ROUNDED EDITION
+   Rounded codex borders · playground (undo + capped ink) ·
+   crumple · scroll-spy · theme. Zero dependencies.
+   ═══════════════════════════════════════════════════════════════ */
+(() => {
+  'use strict';
+  const $  = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const NS = 'http://www.w3.org/2000/svg';
+  const svgEl = (n, attrs = {}) => {
+    const e = document.createElementNS(NS, n);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  };
+  const fx = v => +v.toFixed(1);
+  const state = { tool: null, busy: false };
+
+  let toastTimer;
+  const say = msg => {
+    const t = $('#toast');
+    $('#toastMsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+  };
+
+  /* ── 1 · ROUNDED CODEX BORDERS ─────────────────────────────────
+     Inline SVG rounded-rect paths with jittered edges, wobbled
+     corner arcs, per-pass stroke widths (pressure) and re-press
+     accents. ResizeObserver redraws them on size change.         */
+  const Borders = (() => {
+    const AMP = 1.25;
+    const WIDTHS = [2.7, 2.15, 2.5, 2.0];
+    const j = amp => (Math.random() * 2 - 1) * amp;
+
+    const jitterLine = (x1, y1, x2, y2, amp) => {
+      const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1;
+      const n = Math.max(2, Math.round(len / 26));
+      const nx = -dy / len, ny = dx / len;
+      let d = `M ${fx(x1)} ${fx(y1)}`, px = x1, py = y1;
+      for (let i = 1; i <= n; i++) {
+        const t = i / n;
+        const w = i === n ? 0 : j(amp);
+        const x = x1 + dx * t + nx * w, y = y1 + dy * t + ny * w;
+        const mx = (px + x) / 2 + j(amp) * .5, my = (py + y) / 2 + j(amp) * .5;
+        d += ` Q ${fx(mx)} ${fx(my)} ${fx(x)} ${fx(y)}`;
+        px = x; py = y;
+      }
+      return d;
+    };
+
+    const edgeChain = (xa, ya, xb, yb, amp) => {
+      const dx = xb - xa, dy = yb - ya, len = Math.hypot(dx, dy) || 1;
+      const n = Math.max(1, Math.round(len / 30));
+      const nx = -dy / len, ny = dx / len;
+      let s = '', px = xa, py = ya;
+      for (let i = 1; i <= n; i++) {
+        const t = i / n;
+        const w = i === n ? 0 : j(amp);
+        const x = xa + dx * t + nx * w, y = ya + dy * t + ny * w;
+        const mx = (px + x) / 2 + j(amp) * .5, my = (py + y) / 2 + j(amp) * .5;
+        s += ` Q ${fx(mx)} ${fx(my)} ${fx(x)} ${fx(y)}`;
+        px = x; py = y;
+      }
+      return s;
+    };
+
+    const roundRectPath = (x0, y0, x1, y1, r, amp) => {
+      r = Math.max(3, Math.min(r, (x1 - x0) / 2 - 1, (y1 - y0) / 2 - 1));
+      let d = `M ${fx(x0 + r)} ${fx(y0 + j(amp) * .35)}`;
+      d += edgeChain(x0 + r, y0, x1 - r, y0, amp);
+      d += ` Q ${fx(x1 + j(amp) * .35)} ${fx(y0 + j(amp) * .35)} ${fx(x1)} ${fx(y0 + r)}`;
+      d += edgeChain(x1, y0 + r, x1, y1 - r, amp);
+      d += ` Q ${fx(x1 + j(amp) * .35)} ${fx(y1 + j(amp) * .35)} ${fx(x1 - r)} ${fx(y1)}`;
+      d += edgeChain(x1 - r, y1, x0 + r, y1, amp);
+      d += ` Q ${fx(x0 + j(amp) * .35)} ${fx(y1 + j(amp) * .35)} ${fx(x0)} ${fx(y1 - r)}`;
+      d += edgeChain(x0, y1 - r, x0, y0 + r, amp);
+      d += ` Q ${fx(x0 + j(amp) * .35)} ${fx(y0 + j(amp) * .35)} ${fx(x0 + r)} ${fx(y0)}`;
+      return d + ' Z';
+    };
+
+    const loopPath = (cx, cy, rx, ry, amp) => {
+      const N = 24, pts = [];
+      for (let i = 0; i < N; i++) {
+        const a = i / N * Math.PI * 2;
+        const jr = j(amp);
+        pts.push({ x: cx + Math.cos(a) * (rx + jr), y: cy + Math.sin(a) * (ry + jr) });
+      }
+      let d = `M ${fx((pts[0].x + pts[1].x) / 2)} ${fx((pts[0].y + pts[1].y) / 2)}`;
+      for (let i = 1; i <= N; i++) {
+        const p = pts[i % N], q = pts[(i + 1) % N];
+        d += ` Q ${fx(p.x)} ${fx(p.y)} ${fx((p.x + q.x) / 2)} ${fx((p.y + q.y) / 2)}`;
+      }
+      return d + ' Z';
+    };
+
+    const stroke = (d, color, width, filt, extra = {}) => {
+      const p = svgEl('path', Object.assign({
+        d, fill: 'none', 'stroke-width': width.toFixed(2),
+        'stroke-linecap': 'round', 'stroke-linejoin': 'round'
+      }, extra));
+      p.style.stroke = color;
+      p.style.filter = filt;
+      return p;
+    };
+
+    const build = el => {
+      const w = el.offsetWidth, h = el.offsetHeight;
+      if (!w || !h) return;
+      if (el._skW === w && el._skH === h) return;
+      el._skW = w; el._skH = h;
+
+      let svg = el._skSvg;
+      if (!svg) {
+        svg = svgEl('svg', { class: 'sk-border', 'aria-hidden': 'true' });
+        el.appendChild(svg);
+        el._skSvg = svg;
+        el.classList.add('sk-baked');
+      }
+      svg.setAttribute('viewBox', `-12 -12 ${w + 24} ${h + 24}`);
+      svg.innerHTML = '';
+
+      const mode   = el.dataset.skBorder || 'box';
+      const ink    = el.dataset.sk || 'ink';
+      const passes = Math.min(3, parseInt(el.dataset.skPasses || '1', 10));
+      const inward = el.dataset.skIn === '1';
+      const shape  = el.dataset.skShape || 'box';
+      const radius = parseInt(el.dataset.skR || '12', 10);
+      const off    = Math.floor(Math.random() * 4);
+
+      if (mode === 'line') {
+        svg.appendChild(stroke(jitterLine(-5, h - 1.5, w + 6, h - 1.5, 1.1), 'var(--ink)', 2.4, 'var(--f1)'));
+        svg.appendChild(stroke(jitterLine(-3, h + 4, w + 4, h + 4, 1.1), 'var(--blue)', 1.8, 'var(--f2)',
+          { class: 'sk-focus', pathLength: '1' }));
+        return;
+      }
+
+      for (let p = 0; p < passes; p++) {
+        const out = p === 0 ? 0 : 3.5 + p * 2.4;
+        const exp = inward ? -out : out;
+        const g = svgEl('g', { opacity: p === 0 ? '1' : (p === 1 ? '.55' : '.34') });
+        if (p > 0) g.setAttribute('transform',
+          `rotate(${(Math.random() * 1.2 - .6).toFixed(2)} ${fx(w / 2)} ${fx(h / 2)})`);
+        const color = ink === 'red'
+          ? (p === 0 ? 'var(--red)' : 'var(--red-ghost)')
+          : 'var(--ink)';
+        const filt = p === 0 ? 'var(--f1)' : 'var(--f2)';
+        const amp = AMP + p * .65;
+        const wMul = p === 0 ? 1 : .8;
+        const baseW = WIDTHS[(p + off) % 4] * wMul;
+
+        if (shape === 'loop') {
+          g.appendChild(stroke(loopPath(w / 2, h / 2, w / 2 + exp, h / 2 + exp, amp),
+            color, baseW * .85, filt));
+        } else {
+          const x0 = -exp, y0 = -exp, x1 = w + exp, y1 = h + exp;
+          g.appendChild(stroke(roundRectPath(x0, y0, x1, y1, radius + Math.max(0, exp), amp),
+            color, baseW, filt));
+          if (p === 0) { /* pressure accent along the top-left run */
+            const run = x1 - x0 - radius * 2;
+            const ax = x0 + radius + run * .07;
+            const d = `M ${fx(ax)} ${fx(y0)} Q ${fx(ax + run * .09)} ${fx(y0 - 1.2)} ${fx(ax + run * .18)} ${fx(y0)}`;
+            g.appendChild(stroke(d, color, baseW + 1.5, filt, { opacity: '.5' }));
+          }
+        }
+        svg.appendChild(g);
+      }
+    };
+
+    const init = () => {
+      const ro = new ResizeObserver(entries => {
+        for (const en of entries) {
+          const el = en.target;
+          requestAnimationFrame(() => { el._skW = 0; build(el); });
+        }
+      });
+      $$('[data-sk-border]').forEach(el => { build(el); ro.observe(el); });
+    };
+    return { init };
+  })();
+
+  /* ── 2 · PLAYGROUND ─────────────────────────────────────────── */
+  const Playground = (() => {
+    const face = $('#sheetFace'), deskEl = $('#desk');
+    const strokesG = $('#inkStrokes'), marksG = $('#inkMarks');
+    const chip = $('#toolChip'), chipTxt = $('#chipTxt');
+    const HINTS = {
+      draw:    'graphite freehand — drag anywhere on the sheet',
+      measure: 'construction lines — snaps 0° / 45° / 47° / 90°',
+      fix:     'eraser — drag across marks to lift them off'
+    };
+    const JUNK = {
+      pin:    'Pin — ships in a later revision.',
+      eye:    'Inspect — contrast checked, kerning approved.',
+      reward: 'Star — reserved for shipped work.',
+      send:   'Send — wired to your inbox in production.'
+    };
+    const ANGLES = [0, 45, 47, 90, 135, 137];
+    const STROKE_CAP = 140;
+    const undoStack = [];
+    let act = null;
+
+    const pt = e => {
+      const r = face.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    };
+    const ptsToD = pts => {
+      if (pts.length === 1) return `M ${fx(pts[0].x)} ${fx(pts[0].y)} l .1 0`;
+      if (pts.length === 2) return `M ${fx(pts[0].x)} ${fx(pts[0].y)} L ${fx(pts[1].x)} ${fx(pts[1].y)}`;
+      let d = `M ${fx(pts[0].x)} ${fx(pts[0].y)}`;
+      for (let i = 1; i < pts.length - 1; i++) {
+        const mx = (pts[i].x + pts[i + 1].x) / 2, my = (pts[i].y + pts[i + 1].y) / 2;
+        d += ` Q ${fx(pts[i].x)} ${fx(pts[i].y)} ${fx(mx)} ${fx(my)}`;
+      }
+      const l = pts[pts.length - 1];
+      return d + ` L ${fx(l.x)} ${fx(l.y)}`;
+    };
+    const snap = (s, p) => {
+      const dx = p.x - s.x, dy = p.y - s.y, dist = Math.hypot(dx, dy);
+      if (dist < 4) return p;
+      const deg = Math.atan2(dy, dx) * 180 / Math.PI;
+      let best = deg, bd = 1e9;
+      for (const a of ANGLES) for (const k of [-360, -180, 0, 180, 360]) {
+        const d = Math.abs(deg - (a + k));
+        if (d < bd) { bd = d; best = a + k; }
+      }
+      const r = best * Math.PI / 180;
+      return { x: s.x + Math.cos(r) * dist, y: s.y + Math.sin(r) * dist };
+    };
+
+    const lift = el => {
+      if (!el || el.classList.contains('erasing')) return;
+      const i = undoStack.indexOf(el);
+      if (i > -1) undoStack.splice(i, 1);
+      el.classList.add('erasing');
+      setTimeout(() => el.remove(), 260);
+    };
+    const capStrokes = () => {
+      while (strokesG.children.length > STROKE_CAP) lift(strokesG.firstElementChild);
+    };
+
+    const setTool = name => {
+      state.tool = name;
+      $$('.tool-btn').forEach(b => {
+        const on = b.dataset.tool === name;
+        b.classList.toggle('active', on);
+        if (b.dataset.tool !== 'discard') b.setAttribute('aria-pressed', String(on));
+      });
+      face.classList.toggle('tool-draw', name === 'draw');
+      face.classList.toggle('tool-measure', name === 'measure');
+      face.classList.toggle('tool-fix', name === 'fix');
+      if (name) { chipTxt.textContent = `${name} — ${HINTS[name] || ''}`; chip.hidden = false; }
+      else chip.hidden = true;
+    };
+
+    const updateMeasure = (g, s, p) => {
+      const dx = p.x - s.x, dy = p.y - s.y, dist = Math.hypot(dx, dy) || 1;
+      const nx = -dy / dist, ny = dx / dist, t = 6;
+      const line = g.querySelector('.m-line');
+      line.setAttribute('x1', fx(s.x)); line.setAttribute('y1', fx(s.y));
+      line.setAttribute('x2', fx(p.x)); line.setAttribute('y2', fx(p.y));
+      g.querySelector('.m-tick').setAttribute('d',
+        `M ${fx(s.x + nx * t)} ${fx(s.y + ny * t)} L ${fx(s.x - nx * t)} ${fx(s.y - ny * t)}` +
+        ` M ${fx(p.x + nx * t)} ${fx(p.y + ny * t)} L ${fx(p.x - nx * t)} ${fx(p.y - ny * t)}`);
+      const deg = ((Math.atan2(dy, dx) * 180 / Math.PI) % 180 + 180) % 180;
+      const lbl = g.querySelector('.m-label');
+      lbl.setAttribute('x', fx((s.x + p.x) / 2 + nx * 13));
+      lbl.setAttribute('y', fx((s.y + p.y) / 2 + ny * 13));
+      lbl.textContent = `${Math.round(dist)}px · ${Math.round(deg)}°`;
+    };
+    const newMeasure = (s, p) => {
+      const g = svgEl('g', { class: 'measure preview' });
+      g.appendChild(svgEl('line', { class: 'm-line' }));
+      g.appendChild(svgEl('path', { class: 'm-tick' }));
+      g.appendChild(svgEl('text', { class: 'm-label' }));
+      updateMeasure(g, s, p);
+      return g;
+    };
+
+    const eraseAt = p => {
+      for (const g of [strokesG, marksG]) {
+        for (const child of [...g.children]) {
+          try {
+            const b = child.getBBox();
+            if (p.x > b.x - 10 && p.x < b.x + b.width + 10 &&
+                p.y > b.y - 10 && p.y < b.y + b.height + 10) lift(child);
+          } catch (e) {}
+        }
+      }
+    };
+
+    face.addEventListener('pointerdown', e => {
+      if (!state.tool || state.busy) return;
+      if (e.target.closest('button,a,input,label,.lamp')) return;
+      e.preventDefault();
+      const p = pt(e);
+      if (state.tool === 'draw') {
+        const el = svgEl('path', { class: 'stroke', d: ptsToD([p]) });
+        el.style.strokeWidth = (2.2 + Math.random() * 1.2).toFixed(2);
+        strokesG.appendChild(el);
+        act = { type: 'draw', pts: [p], el };
+      } else if (state.tool === 'measure') {
+        const g = newMeasure(p, p);
+        marksG.appendChild(g);
+        act = { type: 'measure', start: p, g };
+      } else {
+        act = { type: 'fix' };
+        eraseAt(p);
+      }
+      try { face.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    face.addEventListener('pointermove', e => {
+      if (!act) return;
+      const p = pt(e);
+      if (act.type === 'draw') {
+        const last = act.pts[act.pts.length - 1];
+        if (Math.hypot(p.x - last.x, p.y - last.y) > 2.2) {
+          act.pts.push(p);
+          act.el.setAttribute('d', ptsToD(act.pts));
+        }
+      } else if (act.type === 'measure') {
+        updateMeasure(act.g, act.start, snap(act.start, p));
+      } else eraseAt(p);
+    });
+    const endStroke = () => {
+      if (!act) return;
+      if (act.type === 'draw') {
+        if (act.pts.length < 3) {
+          act.el.remove();
+          const p0 = act.pts[0];
+          const dot = svgEl('ellipse', {
+            class: 'dot', cx: fx(p0.x), cy: fx(p0.y), rx: '3.2', ry: '2.1',
+            transform: `rotate(${Math.round(Math.random() * 60 - 30)} ${fx(p0.x)} ${fx(p0.y)})`
+          });
+          strokesG.appendChild(dot);
+          undoStack.push(dot);
+        } else undoStack.push(act.el);
+        capStrokes();
+      } else if (act.type === 'measure') {
+        act.g.classList.remove('preview');
+        undoStack.push(act.g);
+      }
+      act = null;
+    };
+    face.addEventListener('pointerup', endStroke);
+    face.addEventListener('pointercancel', endStroke);
+
+    const clearInk = () => {
+      strokesG.innerHTML = '';
+      marksG.innerHTML = '';
+      undoStack.length = 0;
+    };
+    const crumple = () => {
+      if (state.busy) return;
+      setTool(null);
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        clearInk(); say('Fresh sheet ready.');
+        return;
+      }
+      state.busy = true;
+      document.body.classList.add('crumple-lock');
+      deskEl.classList.add('crumpling');
+      setTimeout(() => {
+        clearInk();
+        deskEl.classList.remove('crumpling');
+        document.body.classList.remove('crumple-lock');
+        deskEl.classList.add('fresh');
+        state.busy = false;
+        say('Fresh sheet ready.');
+        setTimeout(() => deskEl.classList.remove('fresh'), 900);
+      }, 1250);
+    };
+
+    const buildCreases = () => {
+      const svg = $('#creases');
+      svg.setAttribute('viewBox', '0 0 100 160');
+      let s = '';
+      for (let i = 0; i < 9; i++) {
+        const x1 = Math.random() * 100, y1 = Math.random() * 160;
+        const x2 = Math.random() * 100, y2 = Math.random() * 160;
+        const mx = (x1 + x2) / 2 + (Math.random() * 20 - 10);
+        const my = (y1 + y2) / 2 + (Math.random() * 20 - 10);
+        s += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}"/>`;
+      }
+      svg.innerHTML = s;
+    };
+
+    const init = () => {
+      buildCreases();
+      $$('.tool-btn').forEach(b => b.addEventListener('click', () => {
+        const t = b.dataset.tool;
+        if (t === 'discard') { crumple(); return; }
+        if (HINTS[t]) { setTool(state.tool === t ? null : t); return; }
+        say(JUNK[t] || 'Reserved for a future revision.');
+      }));
+      addEventListener('keydown', e => {
+        if (e.key === 'Escape' && state.tool) { setTool(null); return; }
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'z') {
+          const el = undoStack[undoStack.length - 1];
+          if (el) { e.preventDefault(); lift(el); }
+        }
+      });
+    };
+    return { init };
+  })();
+
+  /* ── 3 · reveal ── */
+  const reveal = () => {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const zone = entry.target;
+        zone.classList.add('play');
+        $$('.settle', zone).forEach((el, i) => {
+          el.style.transitionDelay = `${i * 70}ms`;
+          el.classList.add('in');
+          setTimeout(() => { el.style.transitionDelay = ''; }, 900 + i * 70);
+        });
+        io.unobserve(zone);
+      });
+    }, { threshold: 0.12 });
+    $$('[data-reveal]').forEach(z => io.observe(z));
+  };
+
+  /* ── 4 · scroll-spy ── */
+  const spy = () => {
+    const links = new Map($$('.nav a').map(a => [a.getAttribute('href').slice(1), a]));
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        $$('.nav a').forEach(a => a.classList.remove('current'));
+        links.get(e.target.id)?.classList.add('current');
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    links.forEach((a, id) => {
+      const s = document.getElementById(id);
+      if (s) io.observe(s);
+    });
+  };
+
+  /* ── 5 · progress ── */
+  const progress = () => {
+    const bar = $('.progress-stroke'), pen = $('.progress-pencil');
+    if (!bar || !pen) return;
+    let ticking = false;
+    const update = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+      bar.style.width = `${p * 100}%`;
+      pen.style.left = `${p * 100}%`;
+      ticking = false;
+    };
+    addEventListener('scroll', () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  };
+
+  /* ── 6 · theme ── */
+  const lamp = () => {
+    const btn = $('#lampBtn');
+    if (!btn) return;
+    let dark = document.documentElement.classList.contains('dark');
+    const apply = d => {
+      document.documentElement.classList.toggle('dark', d);
+      btn.setAttribute('aria-pressed', String(d));
+    };
+    apply(dark);
+    btn.addEventListener('click', () => {
+      dark = !dark; apply(dark);
+      try { localStorage.setItem('skm-dark', dark ? '1' : '0'); } catch (e) {}
+    });
+  };
+
+  /* ── 7 · switches ── */
+  const switches = () => {
+    $$('.switch').forEach(sw => sw.addEventListener('click', () => {
+      const on = sw.getAttribute('aria-checked') !== 'true';
+      sw.setAttribute('aria-checked', String(on));
+      sw.classList.toggle('on', on);
+      if (sw.id === 'smudgeSw') document.body.classList.toggle('smudge', on);
+    }));
+  };
+
+  /* ── 8 · wonk ── */
+  const wonk = () => {
+    const spec = $('#specimen'), btn = $('#wonkBtn');
+    if (!spec || !btn) return;
+    btn.addEventListener('click', () => {
+      const wonky = spec.classList.toggle('wonky');
+      $('.btn-label', btn).textContent = wonky ? 'steady hand' : 'let it wobble';
+    });
+  };
+
+  /* ── 9 · replay ── */
+  const redraw = () => {
+    const btn = $('#redrawBtn'), fig = $('#motion');
+    if (!btn || !fig) return;
+    btn.addEventListener('click', () => {
+      fig.classList.remove('play');
+      $$('.settle', fig).forEach(el => el.classList.remove('in'));
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        fig.classList.add('play');
+        $$('.settle', fig).forEach((el, i) => {
+          el.style.transitionDelay = `${i * 80}ms`;
+          el.classList.add('in');
+          setTimeout(() => { el.style.transitionDelay = ''; }, 1000 + i * 80);
+        });
+      }));
+    });
+  };
+
+  /* ── 10 · form, dust, stamps, dates ── */
+  const extras = () => {
+    $('#fileForm')?.addEventListener('submit', e => {
+      e.preventDefault();
+      say('Request received — this demo form doesn\u2019t send anything.');
+    });
+    document.addEventListener('pointerdown', e => {
+      if (e.button !== 0 || state.tool || state.busy) return;
+      if (e.target.closest('button,a,input,label,.switch,.check,.lamp,.tool-btn,.stamp')) return;
+      const m = document.createElement('span');
+      m.className = 'mark';
+      m.style.left = `${e.clientX - 6}px`;
+      m.style.top  = `${e.clientY - 3}px`;
+      m.style.rotate = `${(Math.random() * 40 - 20).toFixed(1)}deg`;
+      document.body.appendChild(m);
+      setTimeout(() => m.remove(), 950);
+    });
+    $$('.stamp').forEach(s => s.addEventListener('click', () => {
+      s.classList.remove('stamped');
+      void s.offsetWidth;
+      s.classList.add('stamped');
+    }));
+    const d = $('#date');
+    if (d) d.textContent = new Date().toISOString().slice(0, 10);
+    const y = $('#year');
+    if (y) y.textContent = new Date().getFullYear();
+  };
+
+  Borders.init();
+  Playground.init();
+  reveal(); spy(); progress(); lamp(); switches(); wonk(); redraw(); extras();
+})();
+</script>
 </body>
 </html>
