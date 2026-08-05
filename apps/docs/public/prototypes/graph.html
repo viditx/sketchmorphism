@@ -55,22 +55,45 @@
       text-align: center;
     }
 
-    /* Decorative Code Block */
-    .code-block {
-      background: rgba(0,0,0,0.05);
-      border-radius: 12px;
-      padding: 16px;
+    /* Variable Controls */
+    .controls {
+      display: flex;
+      gap: 24px;
       width: 100%;
+      background: rgba(0,0,0,0.03);
+      padding: 16px 20px;
+      border-radius: 12px;
       box-sizing: border-box;
-      font-family: var(--mono);
-      font-size: 0.85rem;
-      color: var(--ink-soft);
-      overflow-x: auto;
-      border: 2px dashed var(--blue-ghost);
+      border: 1px solid rgba(0,0,0,0.05);
+      justify-content: center;
     }
-    .code-block b { color: var(--ink); }
-    .code-block .tag { color: var(--blue); }
-    .code-block .attr { color: var(--red); }
+    .ctrl-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .ctrl-group input[type="text"] {
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-family: inherit;
+      background: var(--paper-lift);
+      color: var(--ink);
+    }
+    .ctrl-group input[type="color"] {
+      border: 1px solid rgba(0,0,0,0.2);
+      padding: 0;
+      width: 100%;
+      height: 30px;
+      border-radius: 6px;
+      cursor: pointer;
+      background: var(--paper-lift);
+    }
 
     .doodle-chart {
       position: absolute;
@@ -171,13 +194,45 @@
       <path class="rd" fill="none" stroke-width="2.5" stroke-linecap="round" filter="url(#skm-grp-w1)" d="M 70 27 Q 93 25.8 116 26.8"/>
     </svg>
 
+    <div class="controls">
+      <div class="ctrl-group">
+        <label for="grp-color">Series Line Color</label>
+        <input type="color" id="grp-color" value="#2b2823">
+      </div>
+      <div class="ctrl-group">
+        <label for="grp-axes">Axes Color</label>
+        <input type="color" id="grp-axes" value="#47658c">
+      </div>
+    </div>
+
     <div class="code-block">
       <pre><code><span class="tag">&lt;svg</span> <span class="attr">class</span>="skm-graph" <span class="attr">viewBox</span>="0 0 560 340"<span class="tag">&gt;</span>
-  <span class="tag">&lt;!--</span> Uses SVG filters for the drawn look <span class="tag">--&gt;</span>
-  <span class="tag">&lt;path</span> <span class="attr">class</span>="ser" <span class="attr">d</span>="..." <span class="attr">filter</span>="url(#skm-grp-w1)" <span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">class</span>="ax" <span class="attr">d</span>="..."<span class="tag">&gt;</span><span class="tag">&lt;/path&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">class</span>="ser" <span class="attr">d</span>="..."<span class="tag">&gt;</span><span class="tag">&lt;/path&gt;</span>
+  <span class="tag">&lt;circle</span> <span class="attr">class</span>="halo" <span class="attr">cx</span>="520" <span class="attr">cy</span>="85"<span class="tag">&gt;</span><span class="tag">&lt;/circle&gt;</span>
+  <span class="tag">&lt;circle</span> <span class="attr">class</span>="pt rd-f" <span class="attr">cx</span>="520" <span class="attr">cy</span>="85"<span class="tag">&gt;</span><span class="tag">&lt;/circle&gt;</span>
 <span class="tag">&lt;/svg&gt;</span></code></pre>
     </div>
   </div>
+
+  <script>
+    const serLine = document.querySelector('.ser');
+    const axesLines = document.querySelectorAll('.ax, .tk, .lb, .gl');
+    
+    document.getElementById('grp-color').addEventListener('input', (e) => {
+      serLine.style.setProperty('stroke', e.target.value);
+    });
+    
+    document.getElementById('grp-axes').addEventListener('input', (e) => {
+      axesLines.forEach(el => {
+        if (el.classList.contains('lb')) {
+          el.style.setProperty('fill', e.target.value);
+        } else {
+          el.style.setProperty('stroke', e.target.value);
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>

@@ -53,6 +53,46 @@
       text-align: center;
     }
 
+    /* Variable Controls */
+    .controls {
+      display: flex;
+      gap: 24px;
+      width: 100%;
+      background: rgba(0,0,0,0.03);
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-sizing: border-box;
+      border: 1px solid rgba(0,0,0,0.05);
+      justify-content: center;
+    }
+    .ctrl-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .ctrl-group input[type="text"] {
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-family: inherit;
+      background: var(--paper-lift);
+      color: var(--ink);
+    }
+    .ctrl-group input[type="color"] {
+      border: 1px solid rgba(0,0,0,0.2);
+      padding: 0;
+      width: 100%;
+      height: 30px;
+      border-radius: 6px;
+      cursor: pointer;
+      background: var(--paper-lift);
+    }
+
     /* Decorative Code Block */
     .code-block {
       background: rgba(0,0,0,0.05);
@@ -124,6 +164,17 @@
       <span class="skm-check__label">Accept the spec terms</span>
     </label>
 
+    <div class="controls">
+      <div class="ctrl-group">
+        <label for="chk-color">Tick Color</label>
+        <input type="color" id="chk-color" value="#c2402a">
+      </div>
+      <div class="ctrl-group">
+        <label for="chk-label">Label Text</label>
+        <input type="text" id="chk-label" value="Accept the spec terms">
+      </div>
+    </div>
+
     <div class="code-block">
       <pre><code><span class="tag">&lt;label</span> <span class="attr">class</span>="skm-check"<span class="tag">&gt;</span>
   <span class="tag">&lt;input</span> <span class="attr">type</span>="checkbox" <span class="attr">checked</span><span class="tag">&gt;</span>
@@ -132,6 +183,19 @@
 <span class="tag">&lt;/label&gt;</span></code></pre>
     </div>
   </div>
+
+  <script>
+    const chkTick = document.querySelector('.skm-check__tick');
+    const chkLabel = document.querySelector('.skm-check__label');
+    
+    document.getElementById('chk-color').addEventListener('input', (e) => {
+      chkTick.style.setProperty('stroke', e.target.value);
+    });
+    
+    document.getElementById('chk-label').addEventListener('input', (e) => {
+      chkLabel.textContent = e.target.value || '\u00A0';
+    });
+  </script>
 
 </body>
 </html>
