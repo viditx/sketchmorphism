@@ -42,7 +42,8 @@ This is a Monorepo managed with npm workspaces, kept clean and modular:
 Hey, I'm **Vidit** ([@viditx](https://github.com/viditx))! I'm 15, currently doing my Diploma in Computer Engineering, super passionate about AI, automation, and building stuff that actually feels different.
 
 If you are a developer, designer, or just someone who stumbled upon this and found it cool—I'd love to connect!
-- 🐦 **Twitter/X:** [@viditx_](https://twitter.com/viditx_) *(Drop a DM!)*
+- 👾 **Discord:** `[Tera Discord Tag yaha aayega]`
+- 📧 **Email:** `[Tera Email yaha aayega]`
 - 🌐 **Portfolio:** Coming soon!
 
 **Want to support Sketchmorphism?**
