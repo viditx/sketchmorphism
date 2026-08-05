@@ -563,7 +563,17 @@ h1{
 .doodle-arrow{top:26px;right:7%;--r:4deg;width:58px}
 .doodle-arrow path{stroke:var(--red);stroke-width:2.6}
 
-/* ── 07 · TITLE BLOCK · HUD ──────────────────────────────────── */
+/* FIG 07 · usage */
+.usage-grid{display:grid;grid-template-columns:1fr;gap:32px;margin-bottom:24px}
+.code-block{background:var(--desk);border-radius:var(--rad-card);padding:16px;font-family:var(--mono);font-size:.85rem;color:var(--ink-soft);overflow-x:auto;position:relative;z-index:1;line-height:1.7}
+.code-block b{color:var(--ink)}
+.code-block .tag{color:var(--blue)}
+.code-block .attr{color:var(--red)}
+.doodle-brace{top:-8px;right:8%;--r:12deg;width:40px}
+.doodle-brace path{stroke:var(--blue);stroke-width:2.8}
+@media (min-width:900px){.usage-grid{grid-template-columns:1fr 1fr}}
+
+/* ── 08 · TITLE BLOCK · HUD ──────────────────────────────────── */
 .titleblock{position:relative;z-index:1;padding-block:64px 56px}
 .tb{position:relative;z-index:0}
 .tb .hatch{--lx:10px;--ly:12px}
@@ -1218,7 +1228,88 @@ body.smudge{--f1:url(#wob2);--f2:url(#wob3)}
             </svg>
           </div>
         </section>
+
+        <!-- ══════════ FIG 07 · USAGE ══════════ -->
+        <section class="fig wrap" id="usage" data-reveal aria-labelledby="h-usage">
+          <svg class="doodle doodle-brace" viewBox="0 0 40 80" aria-hidden="true">
+            <path class="draw" pathLength="1" d="M30 4C10 4 10 16 10 32C10 40 2 40 2 40C2 40 10 40 10 48C10 64 10 76 30 76" />
+          </svg>
+          <header class="fig-head settle">
+            <p class="fig-kicker mono">
+              <span class="fig-tag">Fig. 07
+                <svg class="loop" viewBox="0 0 120 46" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="loop-p draw" pathLength="1" d="M14 26C10 12 34 6 62 6s48 7 46 18-28 16-60 15S12 32 18 17c3-6 13-9 24-10"/>
+                </svg>
+              </span>
+              <span class="fig-sub">— Developer Guide</span>
+            </p>
+            <h2 id="h-usage">Bring it to your project</h2>
+            <svg class="frule" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true">
+              <path class="fr-line draw" pathLength="1" d="M-1 8H101"/>
+              <path class="fr-tick" d="M3 3v10M97 3v10"/>
+            </svg>
+          </header>
+
+          <div class="usage-grid">
+            <article class="card settle" style="--tilt:-.4deg">
+              <div class="hatch" aria-hidden="true"></div>
+              <div class="face">
+                <h3>1. Core files</h3>
+                <p>Include the Sketchmorphism stylesheet and runtime script. No external dependencies, just one CSS and one JS file.</p>
+                <div class="code-block" style="margin-top: 16px;" data-sk-border data-sk-r="12">
+                  <pre><code><span class="tag">&lt;link</span> <span class="attr">rel</span>="stylesheet" <span class="attr">href</span>="skm.css"<span class="tag">&gt;</span>
+<span class="tag">&lt;script</span> <span class="attr">src</span>="skm.js" <span class="attr">defer</span><span class="tag">&gt;&lt;/script&gt;</span></code></pre>
+                </div>
+              </div>
+            </article>
+
+            <article class="card settle" style="--tilt:.5deg">
+              <div class="hatch" aria-hidden="true"></div>
+              <div class="face">
+                <h3>2. The Markup</h3>
+                <p>Use the <b>data-sk-border</b> attribute. The JS runtime will automatically bake SVG borders around it on load and resize.</p>
+                <div class="code-block" style="margin-top: 16px;" data-sk-border data-sk-r="12">
+                  <pre><code><span class="tag">&lt;div</span> <span class="attr">data-sk-border</span> <span class="attr">data-sk-r</span>="14"<span class="tag">&gt;</span>
+  Drawn content here
+<span class="tag">&lt;/div&gt;</span></code></pre>
+                </div>
+              </div>
+            </article>
+
+            <article class="card settle" style="--tilt:-.2deg">
+              <div class="hatch" aria-hidden="true"></div>
+              <div class="face">
+                <h3>3. Colors &amp; Passes</h3>
+                <p>You can change the pencil color or request a double-pass (messier) stroke using attributes.</p>
+                <div class="code-block" style="margin-top: 16px;" data-sk-border data-sk-r="12">
+                  <pre><code><span class="tag">&lt;span</span>
+  <span class="attr">data-sk-border</span>
+  <span class="attr">data-sk</span>="red"
+  <span class="attr">data-sk-passes</span>="2"
+<span class="tag">&gt;</span>Important!<span class="tag">&lt;/span&gt;</span></code></pre>
+                </div>
+              </div>
+            </article>
+
+            <article class="card settle" style="--tilt:.3deg">
+              <div class="hatch" aria-hidden="true"></div>
+              <div class="face">
+                <h3>4. Motion</h3>
+                <p>Add the <b>settle</b> class to elements, and wrap them in a container with <b>data-reveal</b> to stagger them in.</p>
+                <div class="code-block" style="margin-top: 16px;" data-sk-border data-sk-r="12">
+                  <pre><code><span class="tag">&lt;section</span> <span class="attr">data-reveal</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h2</span> <span class="attr">class</span>="settle"<span class="tag">&gt;</span>Hey<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;p</span> <span class="attr">class</span>="settle"<span class="tag">&gt;</span>World<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/section&gt;</span></code></pre>
+                </div>
+              </div>
+            </article>
+          </div>
+          
+          <p class="note tray-note settle" style="--tilt:1.2deg">The runtime is incredibly lightweight. Resize events are debounced and batched.</p>
+        </section>
       </main>
+
 
       <!-- ══════════ TITLE BLOCK ══════════ -->
       <footer class="titleblock">

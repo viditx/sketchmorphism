@@ -1,46 +1,147 @@
-<!-- ── SKM BUTTON · primary · 120×40 ──────────────────────────── -->
-<button class="skm-btn" type="button">
-  <svg class="skm-btn__art" viewBox="-8 -8 136 56" aria-hidden="true">
-    <defs>
-      <filter id="skm-btn-w1" x="-20%" y="-20%" width="140%" height="140%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.022 0.035" numOctaves="3" seed="7" result="n"/>
-        <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
-      </filter>
-      <filter id="skm-btn-w2" x="-25%" y="-25%" width="150%" height="150%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.03 0.045" numOctaves="3" seed="11" result="n"/>
-        <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5"/>
-      </filter>
-      <pattern id="skm-btn-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(47)">
-        <line x1="0" y1="0" x2="0" y2="7" style="stroke:var(--red-ghost,rgba(194,64,42,.45));stroke-width:1.3"/>
-      </pattern>
-    </defs>
-    <!-- hatch lift (depth, law 02) -->
-    <path d="M 13.6 1.1 Q 30 .2 46.5 1.3 Q 63 .5 79.5 1.2 Q 94 .3 107.8 1 Q 119.3 .4 119 12.4 Q 118.3 20 119.1 27.9 Q 118.6 39.5 106.9 39 Q 90 38.3 73.4 39.2 Q 56 38.5 39.5 39.1 Q 26 39.7 13.2 38.9 Q .7 39.4 1.2 27.6 Q .5 19 1 11.4 Q 1.3 .6 13.6 1.1 Z"
-          fill="url(#skm-btn-hatch)" filter="url(#skm-btn-w2)" transform="translate(5 6) rotate(.6 60 20)"/>
-    <!-- pass 02 · retraced -->
-    <path d="M 10.8 -2.4 Q 34 -3.4 60 -2.6 Q 86 -3.5 110.6 -2.5 Q 122.8 -3.1 122.4 9.6 Q 123.1 20 122.5 30.8 Q 122.9 42.7 110.4 42.4 Q 82 43.2 56 42.5 Q 30 43.1 10.2 42.3 Q -2.6 42.9 -2.2 30.2 Q -2.9 18 -2.4 8.4 Q -2.8 -2.9 10.8 -2.4 Z"
-          fill="none" style="stroke:var(--red-ghost,rgba(194,64,42,.55));stroke-width:2"
-          filter="url(#skm-btn-w2)" transform="rotate(.7 60 20)"/>
-    <!-- pass 01 · primary frame -->
-    <path d="M 13.6 1.1 Q 30 .2 46.5 1.3 Q 63 .5 79.5 1.2 Q 94 .3 107.8 1 Q 119.3 .4 119 12.4 Q 118.3 20 119.1 27.9 Q 118.6 39.5 106.9 39 Q 90 38.3 73.4 39.2 Q 56 38.5 39.5 39.1 Q 26 39.7 13.2 38.9 Q .7 39.4 1.2 27.6 Q .5 19 1 11.4 Q 1.3 .6 13.6 1.1 Z"
-          fill="none" style="stroke:var(--red,#c2402a);stroke-width:2.6"
-          stroke-linecap="round" stroke-linejoin="round" filter="url(#skm-btn-w1)"/>
-    <!-- pressure accent · the pen re-presses -->
-    <path d="M 22 .9 Q 30 -.5 38 .8" fill="none" style="stroke:var(--red,#c2402a);stroke-width:4"
-          stroke-linecap="round" opacity=".45" filter="url(#skm-btn-w1)"/>
-  </svg>
-  <span class="skm-btn__label">Confirm</span>
-</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sketchmorphism Button</title>
+  <style>
+    :root {
+      --desk: #1a1a1a;
+      --paper: #f4efd8;
+      --paper-lift: #fbf7ec;
+      --ink: #2b2b2b;
+      --ink-soft: #4a4a4a;
+      --red: #c2402a;
+      --red-ghost: rgba(194,64,42,.45);
+      --red-ghost-hard: rgba(194,64,42,.55);
+      --blue: #47658c;
+      --blue-ghost: rgba(71,101,140,.4);
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
 
-<style>
-  .skm-btn{
-    position:relative;width:120px;height:40px;border:0;isolation:isolate;cursor:pointer;
-    background:var(--paper-lift,#fbf7ec);border-radius:12px;
-    font:600 15px/1 'Schibsted Grotesk',system-ui,sans-serif;color:var(--red,#c2402a);
-  }
-  .skm-btn__art{position:absolute;inset:-8px;width:136px;height:56px;overflow:visible;pointer-events:none}
-  .skm-btn__label{position:relative;display:block;transition:transform .3s cubic-bezier(.27,1.36,.39,1)}
-  .skm-btn:hover .skm-btn__label{transform:translate(-1px,-1px)}
-  .skm-btn:active .skm-btn__label{transform:translate(3px,4px)} /* sinks into the hatch */
-  .skm-btn:focus-visible{outline:2px dashed var(--blue,#47658c);outline-offset:4px}
-</style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--desk);
+      font-family: 'Schibsted Grotesk', system-ui, sans-serif;
+      color: var(--ink);
+    }
+
+    .container {
+      background: var(--paper);
+      padding: 48px;
+      border-radius: 24px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      max-width: 400px;
+      width: 100%;
+      position: relative;
+    }
+
+    /* ── SKM BUTTON · primary · 120×40 ──────────────────────────── */
+    .skm-btn{
+      position:relative;width:120px;height:40px;border:0;isolation:isolate;cursor:pointer;
+      background:var(--paper-lift);border-radius:12px;
+      font:600 15px/1 'Schibsted Grotesk',system-ui,sans-serif;color:var(--red);
+      display: inline-block;
+    }
+    .skm-btn__art{position:absolute;inset:-8px;width:136px;height:56px;overflow:visible;pointer-events:none}
+    .skm-btn__label{position:relative;display:block;transition:transform .3s cubic-bezier(.27,1.36,.39,1)}
+    .skm-btn:hover .skm-btn__label{transform:translate(-1px,-1px)}
+    .skm-btn:active .skm-btn__label{transform:translate(3px,4px)} /* sinks into the hatch */
+    .skm-btn:focus-visible{outline:2px dashed var(--blue);outline-offset:4px}
+
+    /* Decorative Code Block */
+    .code-block {
+      background: rgba(0,0,0,0.05);
+      border-radius: 12px;
+      padding: 16px;
+      width: 100%;
+      box-sizing: border-box;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+      overflow-x: auto;
+      border: 2px dashed var(--blue-ghost);
+    }
+    .code-block b { color: var(--ink); }
+    .code-block .tag { color: var(--blue); }
+    .code-block .attr { color: var(--red); }
+    
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    
+    .doodle-star {
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 60px;
+      height: 60px;
+      stroke: var(--blue);
+      stroke-width: 2.5;
+      fill: none;
+      transform: rotate(15deg);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <svg class="doodle-star" viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M 50 10 L 60 40 L 90 45 L 65 65 L 75 95 L 50 75 L 25 95 L 35 65 L 10 45 L 40 40 Z" stroke-linejoin="round"/>
+    </svg>
+    
+    <h1>Primary Button</h1>
+
+    <button class="skm-btn" type="button">
+      <svg class="skm-btn__art" viewBox="-8 -8 136 56" aria-hidden="true">
+        <defs>
+          <filter id="skm-btn-w1" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.022 0.035" numOctaves="3" seed="7" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
+          </filter>
+          <filter id="skm-btn-w2" x="-25%" y="-25%" width="150%" height="150%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.03 0.045" numOctaves="3" seed="11" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5"/>
+          </filter>
+          <pattern id="skm-btn-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(47)">
+            <line x1="0" y1="0" x2="0" y2="7" style="stroke:var(--red-ghost);stroke-width:1.3"/>
+          </pattern>
+        </defs>
+        <!-- hatch lift (depth, law 02) -->
+        <path d="M 13.6 1.1 Q 30 .2 46.5 1.3 Q 63 .5 79.5 1.2 Q 94 .3 107.8 1 Q 119.3 .4 119 12.4 Q 118.3 20 119.1 27.9 Q 118.6 39.5 106.9 39 Q 90 38.3 73.4 39.2 Q 56 38.5 39.5 39.1 Q 26 39.7 13.2 38.9 Q .7 39.4 1.2 27.6 Q .5 19 1 11.4 Q 1.3 .6 13.6 1.1 Z"
+              fill="url(#skm-btn-hatch)" filter="url(#skm-btn-w2)" transform="translate(5 6) rotate(.6 60 20)"/>
+        <!-- pass 02 · retraced -->
+        <path d="M 10.8 -2.4 Q 34 -3.4 60 -2.6 Q 86 -3.5 110.6 -2.5 Q 122.8 -3.1 122.4 9.6 Q 123.1 20 122.5 30.8 Q 122.9 42.7 110.4 42.4 Q 82 43.2 56 42.5 Q 30 43.1 10.2 42.3 Q -2.6 42.9 -2.2 30.2 Q -2.9 18 -2.4 8.4 Q -2.8 -2.9 10.8 -2.4 Z"
+              fill="none" style="stroke:var(--red-ghost-hard);stroke-width:2"
+              filter="url(#skm-btn-w2)" transform="rotate(.7 60 20)"/>
+        <!-- pass 01 · primary frame -->
+        <path d="M 13.6 1.1 Q 30 .2 46.5 1.3 Q 63 .5 79.5 1.2 Q 94 .3 107.8 1 Q 119.3 .4 119 12.4 Q 118.3 20 119.1 27.9 Q 118.6 39.5 106.9 39 Q 90 38.3 73.4 39.2 Q 56 38.5 39.5 39.1 Q 26 39.7 13.2 38.9 Q .7 39.4 1.2 27.6 Q .5 19 1 11.4 Q 1.3 .6 13.6 1.1 Z"
+              fill="none" style="stroke:var(--red);stroke-width:2.6"
+              stroke-linecap="round" stroke-linejoin="round" filter="url(#skm-btn-w1)"/>
+        <!-- pressure accent · the pen re-presses -->
+        <path d="M 22 .9 Q 30 -.5 38 .8" fill="none" style="stroke:var(--red);stroke-width:4"
+              stroke-linecap="round" opacity=".45" filter="url(#skm-btn-w1)"/>
+      </svg>
+      <span class="skm-btn__label">Confirm</span>
+    </button>
+
+    <div class="code-block">
+      <pre><code><span class="tag">&lt;button</span> <span class="attr">class</span>="skm-btn" <span class="attr">type</span>="button"<span class="tag">&gt;</span>
+  <span class="tag">&lt;svg</span> <span class="attr">class</span>="skm-btn__art"<span class="tag">&gt;</span>...<span class="tag">&lt;/svg&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attr">class</span>="skm-btn__label"<span class="tag">&gt;</span>Confirm<span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;/button&gt;</span></code></pre>
+    </div>
+  </div>
+
+</body>
+</html>
