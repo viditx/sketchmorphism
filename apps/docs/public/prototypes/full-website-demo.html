@@ -245,8 +245,13 @@ section{scroll-margin-top:40px}
 .pencil--blue{--pen-body:#8fa7c4;--pen-core:#47658c}
 .pencil--red{--pen-body:#d96a4e;--pen-core:#c2402a}
 
-.doodle{position:absolute;width:46px;overflow:visible;pointer-events:none;opacity:.75}
+.doodle{position:absolute;width:46px;overflow:visible;pointer-events:none;opacity:.75;transform-origin:center;transform:rotate(var(--r,0deg))}
 .doodle path{fill:none;stroke-width:3;stroke-linecap:round;filter:var(--f1)}
+@keyframes doodle-float{
+  0%,100%{transform:rotate(calc(var(--r,0deg) - 2deg)) scale(1)}
+  50%{transform:rotate(calc(var(--r,0deg) + 2deg)) scale(1.05)}
+}
+.play .doodle{animation:doodle-float 3s ease-in-out infinite .9s}
 
 /* ── 04 · MASTHEAD ───────────────────────────────────────────── */
 .masthead{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-block:28px 14px;position:relative;z-index:1}
@@ -350,7 +355,7 @@ h1{
 .principles li:hover .p-no{transform:rotate(3deg) scale(1.07)}
 .principles h3{font-family:var(--disp);font-size:1.15rem;font-weight:600;font-variation-settings:"WONK" 1;margin-bottom:4px}
 .principles p{font-size:.95rem;color:var(--ink-soft)}
-.doodle-star{top:-4px;right:5%;transform:rotate(9deg)}
+.doodle-star{top:-4px;right:5%;--r:9deg}
 .doodle-star path{stroke:var(--red)}
 
 /* FIG 01 · stroke tokens */
@@ -544,7 +549,7 @@ h1{
 .type-meta li{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;color:var(--ink-soft)}
 .type-meta b{color:var(--ink)}
 .type-note{margin-top:22px;font-size:1.05rem;max-width:24em}
-.doodle-spiral{bottom:36px;right:4%;transform:rotate(-11deg)}
+.doodle-spiral{bottom:36px;right:4%;--r:-11deg}
 .doodle-spiral path{stroke:var(--blue);stroke-width:2.4}
 
 /* FIG 06 · motion */
@@ -555,7 +560,7 @@ h1{
 .scribble-demo{width:min(560px,100%);overflow:visible}
 .scribble-demo .draw{stroke:var(--ink);stroke-width:3;fill:none;stroke-linecap:round;filter:var(--f1)}
 .play .scribble-demo .draw{animation-duration:1.5s}
-.doodle-arrow{top:26px;right:7%;transform:rotate(4deg);width:58px}
+.doodle-arrow{top:26px;right:7%;--r:4deg;width:58px}
 .doodle-arrow path{stroke:var(--red);stroke-width:2.6}
 
 /* ── 07 · TITLE BLOCK · HUD ──────────────────────────────────── */
