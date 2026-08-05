@@ -28,6 +28,16 @@ This is a Monorepo managed with npm workspaces, kept clean and modular:
 
 *(Docs and setup instructions coming soon as we finalize the Vite development environment!)*
 
+## 👀 See the Demos (Prototypes)
+
+Want to see what Sketchmorphism looks like right now? Check out these raw HTML/CSS prototypes generated during our design phase:
+- 🔵 [**Button Prototype**](./prototypes/button.html)
+- ☑️ [**Checkbox Prototype**](./prototypes/checkbox.html)
+- 📊 [**Graph Prototype**](./prototypes/graph.html)
+- ⌨️ [**Input Prototype**](./prototypes/input.html)
+
+*(Note: These are raw HTML files. To view them, clone the repo and open them in your browser, or wait for our live Vite playground!)*
+
 ## 🛠️ Built With
 
 *   TypeScript (because sanity matters)
