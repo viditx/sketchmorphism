@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sketchmorphism Full Website Demo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600&family=Shantell+Sans:wght@400;600&family=Space+Mono&display=swap');
+    
+    :root {
+      --paper: #f4efe3;
+      --paper-lift: #fbf7ec;
+      --ink: #2b2823;
+      --ink-soft: #5d574d;
+      --blue: #47658c;
+      --red: #c2402a;
+    }
+    
+    body {
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: 'Schibsted Grotesk', system-ui, sans-serif;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .demo-container {
+      width: 100%;
+      max-width: 800px;
+      background: var(--paper-lift);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(43, 40, 35, 0.05);
+      border: 2px dashed rgba(43, 40, 35, 0.1);
+    }
+
+    h1 {
+      font-family: 'Shantell Sans', cursive;
+      color: var(--ink);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <h1>Sketchmorphism Demo</h1>
+    <!-- ── SKM GRAPH · line chart · 560×340 ───────────────────────── -->
+    <svg class="skm-graph" viewBox="0 0 560 340" role="img" aria-labelledby="skm-grp-t skm-grp-d"
+         style="width:100%;max-width:720px;height:auto">
+      <title id="skm-grp-t">Shipments, January to June</title>
+      <desc id="skm-grp-d">Hand-drawn line chart rising from 32 in January to a peak of 84 in June.</desc>
+
+      <style>
+        .skm-graph text{font-family:'Space Mono',monospace;letter-spacing:.08em}
+        .ax{stroke:var(--blue,#47658c);stroke-width:2;fill:none;stroke-linecap:round}
+        .tk{stroke:var(--blue,#47658c);stroke-width:1.8}
+        .lb{fill:var(--blue,#47658c);font-size:10px}
+        .tt{fill:var(--ink,#2b2823);font-size:11px;font-weight:700}
+        .gl{stroke:var(--blue,#47658c);stroke-width:1;opacity:.16;fill:none}
+        .ser{stroke:var(--ink,#2b2823);stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+        .pt{fill:var(--ink,#2b2823)}
+        .halo{fill:var(--paper,#f4efe3)}
+        .rd{stroke:var(--red,#c2402a)}
+        .rd-f{fill:var(--red,#c2402a)}
+        .dash{stroke-dasharray:3 6;opacity:.8}
+      </style>
+
+      <defs>
+        <filter id="skm-grp-w1" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.022 0.035" numOctaves="3" seed="7" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
+        </filter>
+        <filter id="skm-grp-w2" x="-25%" y="-25%" width="150%" height="150%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.03 0.045" numOctaves="3" seed="11" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5"/>
+        </filter>
+        <pattern id="skm-grp-grid" x="70" y="40" width="45" height="48" patternUnits="userSpaceOnUse">
+          <path class="gl" d="M45 0H0V48"/>
+        </pattern>
+        <clipPath id="skm-grp-plot"><rect x="70" y="40" width="450" height="240"/></clipPath>
+      </defs>
+
+      <!-- GRID -->
+      <rect x="70" y="40" width="450" height="240" fill="url(#skm-grp-grid)"/>
+
+      <!-- AXES · construction blue, overshooting -->
+      <path class="ax" filter="url(#skm-grp-w1)" d="M 50 280.5 Q 285 279.2 538 280.3"/>
+      <path class="ax" filter="url(#skm-grp-w1)" d="M 69.6 298 Q 70.5 165 69.5 28"/>
+      <path class="tk" d="M70 280v7M160 280v7M250 280v7M340 280v7M430 280v7M520 280v7"/>
+      <path class="tk" d="M70 280h-7M70 222h-7M70 164h-7M70 106h-7M70 48h-7"/>
+      <text class="lb" x="70" y="300" text-anchor="middle">JAN</text>
+      <text class="lb" x="160" y="300" text-anchor="middle">FEB</text>
+      <text class="lb" x="250" y="300" text-anchor="middle">MAR</text>
+      <text class="lb" x="340" y="300" text-anchor="middle">APR</text>
+      <text class="lb" x="430" y="300" text-anchor="middle">MAY</text>
+      <text class="lb" x="520" y="300" text-anchor="middle">JUN</text>
+      <text class="lb" x="56" y="283" text-anchor="end">0</text>
+      <text class="lb" x="56" y="225" text-anchor="end">25</text>
+      <text class="lb" x="56" y="167" text-anchor="end">50</text>
+      <text class="lb" x="56" y="109" text-anchor="end">75</text>
+      <text class="lb" x="56" y="51" text-anchor="end">100</text>
+
+      <!-- DATA · graphite series -->
+      <path class="ax dash" d="M 520 85 V 280"/>
+      <path class="ser" filter="url(#skm-grp-w1)"
+            d="M 70 206 C 100 193 132 180 160 176 C 190 171 222 187 250 192 C 280 197 312 156 340 138 C 368 120 402 143 430 148 C 464 154 494 110 520 85"/>
+      <circle class="halo" cx="70"  cy="206" r="5.5"/><circle class="pt" cx="70"  cy="206" r="4"/>
+      <circle class="halo" cx="160" cy="176" r="5.5"/><circle class="pt" cx="160" cy="176" r="4"/>
+      <circle class="halo" cx="250" cy="192" r="5.5"/><circle class="pt" cx="250" cy="192" r="4"/>
+      <circle class="halo" cx="340" cy="138" r="5.5"/><circle class="pt" cx="340" cy="138" r="4"/>
+      <circle class="halo" cx="430" cy="148" r="5.5"/><circle class="pt" cx="430" cy="148" r="4"/>
+      <circle class="halo" cx="520" cy="85"  r="6"/>  <circle class="rd-f" cx="520" cy="85" r="4.4"/>
+
+      <!-- ANNOTATION · one red moment -->
+      <path class="rd" fill="none" stroke-width="2.4" stroke-linecap="round" filter="url(#skm-grp-w2)"
+            d="M 501 84 C 500 73 517 67 527 71 C 539 75 542 85 534 91 C 525 98 505 96 502 88 C 500 85 501 82 504 79"/>
+      <path class="rd" fill="none" stroke-width="2" stroke-linecap="round" d="M 497 74 Q 484 66 472 62"/>
+      <text class="lb" x="468" y="60" text-anchor="end" style="fill:var(--red,#c2402a)">PEAK · 84</text>
+
+      <!-- TITLE -->
+      <text class="tt" x="70" y="20">SHIPMENTS — H1</text>
+      <path class="rd" fill="none" stroke-width="2.5" stroke-linecap="round" filter="url(#skm-grp-w1)" d="M 70 27 Q 93 25.8 116 26.8"/>
+    </svg>
+  </div>
+</body>
+</html>

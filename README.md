@@ -31,6 +31,7 @@ This is a Monorepo managed with npm workspaces, kept clean and modular:
 ## 👀 See the Demos (Prototypes)
 
 Want to see what Sketchmorphism looks like right now? Check out these raw HTML/CSS prototypes generated during our design phase:
+- 🚀 [**Full Website Demo**](./prototypes/full-website-demo.html)
 - 🔵 [**Button Prototype**](./prototypes/button.html)
 - ☑️ [**Checkbox Prototype**](./prototypes/checkbox.html)
 - 📊 [**Graph Prototype**](./prototypes/graph.html)
