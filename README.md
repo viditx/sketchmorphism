@@ -53,7 +53,7 @@ Want to see what Sketchmorphism looks like right now? Check out these raw HTML/C
 Hey, I'm **Vidit** ([@viditx](https://github.com/viditx))! I'm 15, super passionate about AI, automation, and building stuff that actually feels different.
 
 If you are a developer, designer, or just someone who stumbled upon this and found it cool—I'd love to connect!
-- ✈️ **Telegram:** `[Tera Telegram Username yaha aayega]`
+- ✈️ **Telegram:** [@VYDITPVT](https://t.me/VYDITPVT)
 - 🌐 **Portfolio:** Coming soon!
 
 **Want to support Sketchmorphism?**
