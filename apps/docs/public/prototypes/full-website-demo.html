@@ -631,6 +631,14 @@ body.smudge{--f1:url(#wob2);--f2:url(#wob3)}
   .stamp{margin-left:0}
   .meter{grid-template-columns:1fr;gap:8px}
 }
+@media (max-width:480px){
+  .tray{grid-template-columns:1fr}
+  .tb-grid{grid-template-columns:1fr}
+  .cell{border-right:0!important;border-bottom:1.5px solid var(--ink-faint)!important}
+  .cell:last-child{border-bottom:0!important}
+  h1{font-size:3rem;line-height:1}
+  .masthead{flex-direction:column;align-items:flex-start}
+}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .settle{opacity:1;transform:none}
