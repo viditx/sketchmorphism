@@ -32,3 +32,15 @@ This is a Monorepo managed with npm workspaces.
 *   React
 *   SVG Filters (`feTurbulence`)
 *   tsup (Bundling)
+
+---
+
+## 👨‍💻 Credits & Support
+
+**Made with ☕ by [viditx](https://github.com/viditx)**
+
+If you like Sketchmorphism and want to support the development of organic, non-corporate UI tools:
+- ⭐ **Star this repository** to show your support!
+- 🐛 **Report bugs** or request features in the Issues tab.
+- 🛠️ **Contribute** to the code if you have ideas to make it even more squiggly.
+
