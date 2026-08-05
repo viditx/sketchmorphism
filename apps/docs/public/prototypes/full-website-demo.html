@@ -113,15 +113,17 @@ section{scroll-margin-top:40px}
 
 /* crumple + fresh sheet */
 @keyframes toss{
-  0%{transform:none}
-  26%{transform:translate(2vw,-2vh) scale(.82) rotate(4deg)}
-  60%{transform:translate(26vw,12vh) scale(.4) rotate(38deg)}
-  100%{transform:translate(85vw,120vh) scale(.12) rotate(152deg)}
+  0%{transform:perspective(1200px) translate3d(0,0,0) rotate(0)}
+  15%{transform:perspective(1200px) translate3d(-2vw,-3vh,50px) rotate(-3deg) scale(.95)}
+  45%{transform:perspective(1200px) translate3d(10vw,15vh,-100px) rotateX(40deg) rotateY(30deg) rotateZ(20deg) scale(.6)}
+  75%{transform:perspective(1200px) translate3d(45vw,60vh,-300px) rotateX(120deg) rotateY(80deg) rotateZ(75deg) scale(.25)}
+  100%{transform:perspective(1200px) translate3d(85vw,130vh,-600px) rotateX(220deg) rotateY(160deg) rotateZ(140deg) scale(.05)}
 }
 @keyframes wrinkle{
   0%{border-radius:var(--sheet-r)}
-  40%{border-radius:14% 20% 16% 18% / 18% 14% 20% 16%}
-  100%{border-radius:40% 52% 46% 58% / 55% 42% 58% 44%}
+  25%{border-radius:8% 12% 10% 15% / 12% 9% 14% 11%; box-shadow:inset 0 0 20px rgba(43,40,35,.1)}
+  60%{border-radius:25% 35% 28% 40% / 35% 25% 40% 30%; box-shadow:inset 0 0 60px rgba(43,40,35,.25)}
+  100%{border-radius:45% 55% 50% 60% / 55% 45% 60% 50%; box-shadow:inset 0 0 100px rgba(43,40,35,.4)}
 }
 @keyframes drop{
   0%{transform:translateY(-48px) rotate(-1.8deg);opacity:0}
