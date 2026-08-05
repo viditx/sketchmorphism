@@ -53,14 +53,13 @@ function App() {
 
 ## 👀 See the Demos (Prototypes)
 
-Want to see what Sketchmorphism looks like right now? Check out these raw HTML/CSS prototypes generated during our design phase:
-- 🚀 [**Full Website Demo**](./prototypes/full-website-demo.html)
-- 🔵 [**Button Prototype**](./prototypes/button.html)
-- ☑️ [**Checkbox Prototype**](./prototypes/checkbox.html)
-- 📊 [**Graph Prototype**](./prototypes/graph.html)
-- ⌨️ [**Input Prototype**](./prototypes/input.html)
+Want to see what Sketchmorphism looks like right now? Check out these live prototypes generated during our design phase:
+- 🚀 [**Full Website Demo**](https://viditx.github.io/sketchmorphism/prototypes/full-website-demo.html)
+- 🔵 [**Button Prototype**](https://viditx.github.io/sketchmorphism/prototypes/button.html)
+- ☑️ [**Checkbox Prototype**](https://viditx.github.io/sketchmorphism/prototypes/checkbox.html)
+- 📊 [**Graph Prototype**](https://viditx.github.io/sketchmorphism/prototypes/graph.html)
+- ⌨️ [**Input Prototype**](https://viditx.github.io/sketchmorphism/prototypes/input.html)
 
-*(Note: These are raw HTML files. To view them, clone the repo and open them in your browser, or wait for our live Vite playground!)*
 
 ## 🛠️ Built With
 
