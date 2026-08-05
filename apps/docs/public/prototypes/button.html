@@ -56,7 +56,7 @@
     }
     .skm-btn__art{position:absolute;inset:-8px;width:136px;height:56px;overflow:visible;pointer-events:none}
     .skm-btn__label{position:relative;display:block;transition:transform .3s cubic-bezier(.27,1.36,.39,1)}
-    .skm-btn:hover .skm-btn__label{transform:translate(-1px,-1px)}
+    @media (hover: hover) { .skm-btn:hover .skm-btn__label{transform:translate(-1px,-1px)} }
     .skm-btn:active .skm-btn__label{transform:translate(3px,4px)} /* sinks into the hatch */
     .skm-btn:focus-visible{outline:2px dashed var(--blue);outline-offset:4px}
 

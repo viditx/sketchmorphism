@@ -152,9 +152,9 @@ section{scroll-margin-top:40px}
 .creases{position:absolute;inset:0;width:100%;height:100%;z-index:43;pointer-events:none;opacity:0;transition:opacity .35s}
 .creases path{fill:none;stroke:rgba(var(--ink-rgb),.3);stroke-width:1.1;vector-effect:non-scaling-stroke;filter:var(--f1)}
 
-.sheet-face.tool-draw{cursor:var(--pen-cursor),pointer;user-select:none;touch-action:none}
-.sheet-face.tool-measure{cursor:crosshair;user-select:none;touch-action:none}
-.sheet-face.tool-fix{cursor:var(--eraser-cursor),auto;user-select:none;touch-action:none}
+.sheet-face.tool-draw{cursor:var(--pen-cursor),pointer;user-select:none}
+.sheet-face.tool-measure{cursor:crosshair;user-select:none}
+.sheet-face.tool-fix{cursor:var(--eraser-cursor),auto;user-select:none}
 
 .btn,.nav a,.scrib,.switch,.check,.stamp,.tool-btn,.lamp{cursor:var(--pen-cursor),pointer}
 
@@ -433,7 +433,7 @@ h1{
 .btn .hatch{--lx:5px;--ly:6px;--lr:.5deg;--hatch-c:var(--hatch);border-radius:13px}
 .btn--primary{--btn-ink:var(--red);color:var(--red)}
 .btn--primary .hatch{--hatch-c:var(--red-ghost)}
-.btn:hover .btn-label{transform:translate(-1px,-1px)}
+@media (hover: hover) { .btn:hover .btn-label{transform:translate(-1px,-1px)} }
 .btn:active .btn-label{transform:translate(4px,5px)}
 .btn:active .hatch{--lx:1px;--ly:1px}
 .btn--sm .btn-label{padding:.5em 1.05em;font-size:.84rem}
@@ -1670,6 +1670,14 @@ body.smudge{--f1:url(#wob2);--f2:url(#wob3)}
         }
       }
     };
+
+    const touchHandler = e => {
+      if (!state.tool || state.busy) return;
+      if (e.target.closest('button,a,input,label,.lamp,.switch,.check,.tool-btn,.stamp')) return;
+      if (e.touches && e.touches.length === 1) e.preventDefault();
+    };
+    face.addEventListener('touchstart', touchHandler, { passive: false });
+    face.addEventListener('touchmove', touchHandler, { passive: false });
 
     face.addEventListener('pointerdown', e => {
       if (!state.tool || state.busy) return;
