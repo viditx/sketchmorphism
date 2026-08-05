@@ -24,9 +24,32 @@ This is a Monorepo managed with npm workspaces, kept clean and modular:
 *   **`packages/icons`**: A dedicated suite of sketch-style SVG icons.
 *   **`prototypes/`**: HTML/CSS prototypes of components to reference the raw SVG and CSS structure.
 
-## 🚀 Getting Started
+## 🚀 How to use this in your project
 
-*(Docs and setup instructions coming soon as we finalize the Vite development environment!)*
+Sketchmorphism is designed to be ridiculously easy to drop into your React or Vanilla JS apps.
+
+### 1. Installation
+
+Install the core filters and React components via npm:
+
+```bash
+npm install @sketchmorphism/core @sketchmorphism/react
+```
+
+### 2. Basic React Usage
+
+Just import the components and start building. The raw, sketchy filters are applied automatically!
+
+```tsx
+import { Button } from '@sketchmorphism/react';
+import '@sketchmorphism/core/dist/index.css'; // Coming soon: base styles
+
+function App() {
+  return (
+    <Button>Click Me Fast!</Button>
+  );
+}
+```
 
 ## 👀 See the Demos (Prototypes)
 
