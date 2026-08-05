@@ -2,20 +2,22 @@
 
 Organic, hand-drawn UI component library for React and Vanilla.
 
-**Sketchmorphism** brings the warmth, imperfection, and raw energy of hand-drawn sketches to the digital world. Perfect for wireframing tools, ed-tech platforms, interactive journalism, portfolios, and anything that needs to feel crafted rather than computed.
+Yo! Welcome to **Sketchmorphism**. This isn't just another corporate, pixel-perfect UI library. This is about bringing the warmth, imperfection, and raw energy of hand-drawn sketches back to the web. 
 
-## 🌟 Philosophy
+Perfect for wireframing tools, ed-tech platforms, interactive journalism, portfolios, or honestly, any project that needs to feel crafted by a human rather than computed by a machine.
 
-We believe in the power of the "human touch."
+## 🌟 The Vibe & Philosophy
+
+I built this because I believe in the power of the "human touch."
 *   **Imperfect by Design:** No straight lines, no perfect circles. Everything wiggles, wobbles, and feels alive.
-*   **Performance First:** Built with lightweight SVG filters (`feTurbulence`, `feDisplacementMap`) rather than heavy canvas animations or heavy asset loads.
-*   **Accessible:** Despite the sketchy look, components remain fully accessible and standard-compliant.
+*   **Performance First:** Built with lightweight SVG filters (`feTurbulence`, `feDisplacementMap`). No heavy canvas animations or massive image assets.
+*   **Accessible:** Despite the sketchy, chaotic look, components remain fully accessible and standard-compliant.
 
-*(Read more about our design rules in [DESIGN.md](./DESIGN.md) and market fit in [USE_CASES.md](./USE_CASES.md))*
+*(Wanna dive deeper into the design rules? Check out [DESIGN.md](./DESIGN.md) and our market fit in [USE_CASES.md](./USE_CASES.md))*
 
 ## 📦 Architecture
 
-This is a Monorepo managed with npm workspaces.
+This is a Monorepo managed with npm workspaces, kept clean and modular:
 
 *   **`packages/core`**: The engine. Contains pure JS/TS logic, SVG filter generation (wobble, squiggly), and base styles. Framework agnostic.
 *   **`packages/react`**: React bindings and components (Buttons, Inputs, etc.) that consume the core filters.
@@ -28,19 +30,24 @@ This is a Monorepo managed with npm workspaces.
 
 ## 🛠️ Built With
 
-*   TypeScript
+*   TypeScript (because sanity matters)
 *   React
 *   SVG Filters (`feTurbulence`)
 *   tsup (Bundling)
 
 ---
 
-## 👨‍💻 Credits & Support
+## 👨‍💻 Meet the Maker & Support
 
-**Made with ☕ by [viditx](https://github.com/viditx)**
+Hey, I'm **Vidit** ([@viditx](https://github.com/viditx))! I'm currently doing my Diploma in Computer Engineering, super passionate about AI, automation, and building stuff that actually feels different.
 
-If you like Sketchmorphism and want to support the development of organic, non-corporate UI tools:
-- ⭐ **Star this repository** to show your support!
+If you are a developer, designer, or just someone who stumbled upon this and found it cool—I'd love to connect!
+- 🐦 **Twitter/X:** [@viditx_](https://twitter.com/viditx_) *(Drop a DM!)*
+- 💼 **LinkedIn:** [Vidit](https://linkedin.com/in/viditx)
+- 🌐 **Portfolio:** Coming soon!
+
+**Want to support Sketchmorphism?**
+- ⭐ **Star this repository** (it genuinely makes my day).
 - 🐛 **Report bugs** or request features in the Issues tab.
-- 🛠️ **Contribute** to the code if you have ideas to make it even more squiggly.
+- 🛠️ **Contribute!** Got ideas to make it even more squiggly? PRs are always welcome. Let's build something awesome together.
 
