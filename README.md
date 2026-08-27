@@ -102,6 +102,7 @@ Hey, I'm **Vidit** ([@viditx](https://github.com/viditx)) — 15-year-old builde
 If Sketchmorphism gave your project personality or saved you design time:
 * ⭐ **Star this repository** on GitHub
 * ☕ **[Sponsor on GitHub](https://github.com/sponsors/viditx)** (helps fund my diploma college fees!)
+* 📸 **Instagram:** [@vyditpvt](https://instagram.com/vyditpvt)
 * 💬 Reach out on Telegram: [@VYDITPVT](https://t.me/VYDITPVT)
 
 ---
