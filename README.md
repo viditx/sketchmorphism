@@ -95,13 +95,12 @@ If you're using **Cursor**, **Claude**, or **v0**, you don't even need the npm p
 
 ---
 
-## Author & Support
+## Author & Community
 
-Built by **Vidit Patil** ([@viditx](https://github.com/viditx)).
+Built by **Vidit Patil** ([@viditx](https://github.com/viditx)) — 15-year-old builder obsessed with systems and clean UI.
 
 If Sketchmorphism gave your project personality or saved you design time:
 * Star this repository on GitHub
-* [Sponsor on GitHub](https://github.com/sponsors/viditx) (funds my diploma college fees)
 * Instagram: [@vyditpvt](https://instagram.com/vyditpvt)
 * Telegram: [@VYDITPVT](https://t.me/VYDITPVT)
 
