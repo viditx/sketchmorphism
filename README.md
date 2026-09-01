@@ -1,25 +1,25 @@
 # Sketchmorphism
 
-Every modern web interface has converged on the same sterile defaults: flat shadcn cards, blurred box-shadows, and purple glow meshes. 
+An organic, hand-drawn UI design system and physical component architecture exploring **imperfect physical materiality**. 
 
-**Sketchmorphism** is an organic design system and component architecture exploring **imperfect physical materiality** — replacing digital straight lines with hardware-accelerated SVG turbulence shaders, cross-hatch elevation, and natural paper physics.
+Sketchmorphism replaces sterile 1px digital rectangles, Gaussian blurred shadows, and purple gradient meshes with **hardware-accelerated SVG turbulence shaders, 45-degree architectural cross-hatch elevation, and tactile keycap mechanics**.
 
-Zero heavy Canvas runtimes. Zero 3D engine overhead. Built on standard semantic DOM elements and SVG filter math.
+**Zero heavy Canvas runtimes. Zero WebGL overhead.** Built purely on standard semantic DOM elements and native SVG filter pipelines running at 60fps on the GPU compositor.
 
 [**→ Open Live Interactive Showcase**](https://viditx.github.io/sketchmorphism/prototypes/full-website-demo.html) · [**Design Tokens (DESIGN.md)**](./DESIGN.md) · [**Use Cases (USE_CASES.md)**](./USE_CASES.md)
 
 ---
 
-## The Core Physical Rules
+## The Physical Engineering Laws
 
 ### 1. Strokes Over Mathematical Borders
-Digital 1px borders are mathematically sterile. Sketchmorphism passes standard CSS strokes through dynamic `<feTurbulence>` and `<feDisplacementMap>` matrix calculations to simulate 0.5mm ballpoint pen friction on textured paper.
+Digital 1px borders are mathematically sterile. Sketchmorphism passes outlines through dynamic `<feTurbulence>` and `<feDisplacementMap>` matrix calculations to simulate 0.5mm ballpoint pen friction on textured paper.
 
 ```xml
 <!-- The Native SVG Turbulence Shading Engine -->
-<svg class="sketch-filter-engine" style="display: none;">
+<svg class="sketch-filter-engine" style="display: none;" aria-hidden="true">
   <defs>
-    <filter id="sketch-wobble" x="-10%" y="-10%" width="120%" height="120%">
+    <filter id="sketch-wobble" x="-20%" y="-20%" width="140%" height="140%">
       <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
       <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
     </filter>
@@ -27,10 +27,10 @@ Digital 1px borders are mathematically sterile. Sketchmorphism passes standard C
 </svg>
 ```
 
-### 2. Physical Cross-Hatching Over Blurred CSS Shadows
-Standard CSS `box-shadow` uses Gaussian blur. Sketchmorphism replaces all elevation with **45-degree architectural pencil cross-hatching**. 
+### 2. 45-Degree Architectural Cross-Hatch Depth
+Standard CSS `box-shadow` produces synthetic digital fog. Sketchmorphism replaces all elevation with **45-degree architectural pencil cross-hatching**.
 
-When a user clicks a button, the element physically translates `(3px, 4px)` diagonally into the hatch pattern below, simulating tactile mechanical button depression.
+When clicked, the interactive keycap physically translates `(3px, 4px)` diagonally into the hatch pattern below, simulating mechanical depression:
 
 ```css
 /* Asymmetrical organic card contour */
@@ -48,25 +48,28 @@ When a user clicks a button, the element physically translates `(3px, 4px)` diag
 }
 
 /* Mechanical keycap sink on click */
-.sketch-btn:active {
+.sketch-btn:active .sketch-btn__label {
   transform: translate(3px, 4px);
-  box-shadow: none;
 }
 ```
 
-### 3. The 3-Pencil Palette
-A disciplined, high-contrast physical ink palette:
-- **Warm Desk:** `#d7cfbc`
-- **Cotton Paper:** `#f4efe3`
-- **Charcoal Ink:** `#2b2823`
-- **Draft Blueprint:** `#47658c`
-- **Revision Red:** `#c2402a`
+### 3. The Disciplined Physical Palette
+A high-contrast physical ink palette with zero digital black (`#000000`) or sterile white (`#FFFFFF`):
+
+- **Warm Paper Canvas**: `#f4efe3` (Default background)
+- **Wood / Desk Surface**: `#d7cfbc`
+- **Paper Lift**: `#fbf7ec` (Elevated component fill)
+- **Charcoal Ballpoint Ink**: `#2b2823` (Text, borders, double-pass contours)
+- **Graphite Gray**: `#5c564d` (Secondary typography & borders)
+- **Draft Blueprint Blue**: `#47658c` (Informational accents & focus rings)
+- **Revision Red**: `#c2402a` (Primary keycaps, warnings, callouts)
+- **Highlighter Yellow / Pink**: `#fef08a` / `#fbcfe8` (`mix-blend-mode: multiply`)
 
 ---
 
 ## Live Interactive Demos
 
-Explore the component mechanics live in your browser:
+Experience the component mechanics live in your browser:
 * [**Full Interactive Website Demo**](https://viditx.github.io/sketchmorphism/prototypes/full-website-demo.html)
 * [**Tactile Button Mechanics**](https://viditx.github.io/sketchmorphism/prototypes/button.html)
 * [**Hatched Checkboxes & Toggles**](https://viditx.github.io/sketchmorphism/prototypes/checkbox.html)
@@ -87,20 +90,30 @@ npm install @sketchmorphism/react @sketchmorphism/core
 
 ```tsx
 import React from 'react';
-import { SketchButton, SketchCard } from '@sketchmorphism/react';
+import { 
+  SketchButton, 
+  SketchCard, 
+  SketchInput, 
+  SketchCheckbox 
+} from '@sketchmorphism/react';
 
 export default function Showcase() {
   return (
     <SketchCard highlighted className="max-w-md p-8">
       <h3 className="font-mono text-2xl font-bold uppercase text-[#2b2823]">
-        Handcrafted UI
+        Architectural Drafting UI
       </h3>
-      <p className="mt-4 font-sans text-sm text-[#4a4740] leading-relaxed">
+      <p className="mt-4 text-sm text-[#5c564d] leading-relaxed">
         Engineered with native SVG displacement matrices and 45-degree cross-hatch depth.
       </p>
-      <SketchButton variant="primary" className="mt-6">
-        Press Physical Keycap
-      </SketchButton>
+
+      <div className="mt-6 flex flex-col gap-4">
+        <SketchInput label="Drafting Note" placeholder="Enter specifications..." />
+        <SketchCheckbox label="Enable 60fps GPU displacement" defaultChecked />
+        <SketchButton variant="primary" className="mt-2">
+          Press Mechanical Keycap
+        </SketchButton>
+      </div>
     </SketchCard>
   );
 }
@@ -113,8 +126,8 @@ export default function Showcase() {
 ```
 sketchmorphism/
 ├── packages/
-│   ├── core/         # SVG filter matrices, CSS variables, and design tokens
-│   ├── react/        # Accessible React 19 component wrappers with spring physics
+│   ├── core/         # SVG filter shaders, CSS variables, and design tokens
+│   ├── react/        # Accessible React 19 component wrappers with keycap physics
 │   └── icons/        # Hand-drawn animated vector icon set
 ├── apps/
 │   └── docs/         # Documentation site and live prototype playground
@@ -123,9 +136,11 @@ sketchmorphism/
 
 ---
 
-## Author & Craft
+## Author & Philosophy
 
-Engineered by **Vidit Patil** ([@viditx](https://github.com/viditx)) — Design Engineer & Systems Builder.
+Engineered by **Vidit Patil** ([@viditx](https://github.com/viditx)) — 15-year-old Systems Builder & Design Engineer.
+
+> "Modern interfaces feel sterile because everyone compiles down to the exact same flat geometric abstractions. Sketchmorphism treats the screen as an architectural drafting desk — 0.5mm pen drag, paper fiber resistance, and mechanical keycap physics — running purely on native SVG matrix math and semantic HTML."
 
 - **GitHub:** [github.com/viditx](https://github.com/viditx)
 - **Instagram:** [@vyditpvt](https://instagram.com/vyditpvt)

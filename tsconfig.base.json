@@ -8,6 +8,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "paths": {
+      "@sketchmorphism/core": ["./packages/core/src/index.ts"]
+    }
   }
 }

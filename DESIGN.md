@@ -1,35 +1,61 @@
-# Sketchmorphism Design System
+# Sketchmorphism Design System Specification
 
 ## The Philosophy
-Sketchmorphism is designed to feel organic, hand-crafted, and imperfect. Unlike flat design or neumorphism, there are no straight lines, perfect circles, or solid drop shadows. Everything looks like it was drawn on paper with a marker or pencil.
+Sketchmorphism is an organic, hand-drawn UI design system and physical component architecture. It directly rejects sterile flat defaults, Gaussian-blurred shadows, and purple AI-slop glow meshes.
 
-## Core Visual Rules
+Instead, Sketchmorphism simulates physical drafting paper, 0.5mm ballpoint pen ink friction, and mechanical notebook drafting using **zero heavy Canvas runtimes and zero WebGL bundles** — strictly native SVG displacement shaders and semantic HTML/CSS.
 
-### 1. Borders (The "Strokes Over Borders" Rule)
-- No straight lines.
-- Borders MUST be drawn using SVG paths with a roughened filter (e.g., `<feTurbulence>` + `<feDisplacementMap>`).
-- If a standard CSS border is used, it must be paired with `border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;` (CSS organic shapes) or `clip-path` to avoid perfect rectangles.
+---
 
-### 2. Colors & Textures
-- **Backgrounds**: Should mimic paper, canvas, or chalkboard textures. Use off-whites (`#fdfbf7`), creams, or deep slate/charcoals (`#212529`) for dark mode.
-- **Strokes**: Use pencil-like colors (`#1a1a1a`, `#2c3e50`). Avoid pure black (`#000000`) as it feels too digital.
-- **Fills**: Use cross-hatching SVG patterns or slightly transparent, uneven solid colors.
+## 1. The Disciplined Physical Drafting Palette
+Digital pure black (`#000000`) and sterile white (`#FFFFFF`) are strictly forbidden. The system runs on high-contrast physical ink tokens:
 
-### 3. Typography
-- Use handwriting or marker-style fonts. (e.g., `Comic Neue`, `Caveat`, `Architects Daughter`, `Virgil`).
-- Text should never be perfectly aligned; a slight rotation (`transform: rotate(-1deg)`) can add life to headings.
+| Token | Hex | Role |
+|---|---|---|
+| **Warm Paper Canvas** | `#f4efe3` | Default page background |
+| **Wood / Desk Surface** | `#d7cfbc` | Viewport container / desk border |
+| **Paper Lift** | `#fbf7ec` | Elevated card / button background |
+| **Charcoal Ballpoint Ink** | `#2b2823` | Primary typography, borders, double-pass contours |
+| **Graphite Gray** | `#5c564d` | Secondary text, input placeholders, subtle lines |
+| **Draft Blueprint Blue** | `#47658c` | Informational accents, focus rings, technical badges |
+| **Revision Red** | `#c2402a` | Active states, primary keycap borders, checkmarks |
+| **Highlighter Yellow** | `#fef08a` | Text callouts (`mix-blend-mode: multiply`) |
+| **Highlighter Pink** | `#fbcfe8` | Warning callouts (`mix-blend-mode: multiply`) |
 
-### 4. Shadows & Depth
-- Do NOT use standard smooth CSS `box-shadow`.
-- Shadows should be solid, rough-edged shapes drawn behind the element, mimicking a marker scribble or a harsh, unblended pencil shadow.
+---
 
-## The SVG Filter Engine
-All UI components (Buttons, Inputs, Cards) are wrapped in or utilize a core set of SVG filters to generate the wobble effect dynamically without relying on static raster images.
+## 2. The Core Mathematical Rules
 
-### Standard Wobble Filter
+### Rule 1: Strokes Over Mathematical Borders
+Digital 1px straight borders are banned. Outlines must possess natural hand tremor through native SVG turbulence filter pipelines:
+
 ```xml
-<filter id="sketch-wobble">
+<filter id="sketch-wobble" x="-10%" y="-10%" width="120%" height="120%">
   <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
   <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
 </filter>
 ```
+
+### Rule 2: 45° Architectural Cross-Hatching Over Gaussian Blur
+Standard CSS `box-shadow` with Gaussian blur is replaced with **45-degree architectural pencil cross-hatching**. Elements cast tactile physical line shadows instead of synthetic digital fog.
+
+### Rule 3: Mechanical Keycap Depression
+On `:active` or click, interactive keycaps translate physically diagonally:
+```css
+.sketch-btn:active .sketch-btn__label {
+  transform: translate(3px, 4px);
+}
+```
+The element physically sinks into the hatch shadow underneath, simulating tactile mechanical button depression.
+
+### Rule 4: Asymmetrical Organic Contour
+Hand-cut paper contours replace uniform mathematical corner radii:
+```css
+border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+```
+
+---
+
+## 3. Component Architecture
+- `@sketchmorphism/core`: SVG shader definitions and physical design tokens.
+- `@sketchmorphism/react`: Type-safe React component wrappers (`<SketchButton>`, `<SketchCard>`, `<SketchInput>`, `<SketchCheckbox>`).
