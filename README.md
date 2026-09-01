@@ -136,11 +136,9 @@ sketchmorphism/
 
 ---
 
-## Author & Philosophy
+## Author
 
-Engineered by **Vidit Patil** ([@viditx](https://github.com/viditx)) — 15-year-old Systems Builder & Design Engineer.
-
-> "Modern interfaces feel sterile because everyone compiles down to the exact same flat geometric abstractions. Sketchmorphism treats the screen as an architectural drafting desk — 0.5mm pen drag, paper fiber resistance, and mechanical keycap physics — running purely on native SVG matrix math and semantic HTML."
+**Vidit Patil** ([@viditx](https://github.com/viditx))
 
 - **GitHub:** [github.com/viditx](https://github.com/viditx)
 - **Instagram:** [@vyditpvt](https://instagram.com/vyditpvt)
